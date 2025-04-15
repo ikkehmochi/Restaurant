@@ -8,7 +8,7 @@
                     <h4>Edit Table</h4>
                 </div>
                 <div class="card-body">
-                    <form action="{{ route('tables.update', $table->id) }}" method="POST">
+                    <form action="{{ route('tables.update', $table }}" method="POST">
                         @csrf
                         @method('PUT')
 

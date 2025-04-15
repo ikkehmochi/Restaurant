@@ -36,9 +36,9 @@
                 </ul>
             </li>
             <li class="nav-item">
-                <a href="../generate/theme.html" class="nav-link">
-                    <i class="nav-icon bi bi-palette"></i>
-                    <p>Theme Generate</p>
+                <a href={{ route('tables.index') }} class="nav-link">
+                    <img src="{{ asset("icons/seats.png") }}" alt="" style="width: 24px; height: 24px;">
+                    <p>Tables</p>
                 </a>
             </li>
         </ul>

@@ -5,15 +5,30 @@ namespace App\Http\Controllers;
 use App\Models\Table;
 use App\Models\TableStatus;
 use Illuminate\Http\Request;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class TableController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $tables = Table::with('tableStatus')->paginate();
+        $tables = Table::with('tableStatus')
+            ->when($request->query('search'), function ($query) use ($request) {
+                return $query->where('number', 'LIKE', "%" . $request->query('search') . "%");
+            })
+            ->when($request->query('status'), function ($query) use ($request) {
+                return $query->where('status_id', $request->query('status'));
+            })
+            ->when($request->query('start_date'), function ($query) use ($request) {
+                return $query->whereDate('created_at', '>=', $request->query('start_date'));
+            })
+            ->when($request->query('end_date'), function ($query) use ($request) {
+                return $query->whereDate('created_at', '<=', $request->query('end_date'));
+            })
+            ->paginate(10);;
+
         $statuses = (new Table())->getStatusName();
         return view('table.index', data: compact('tables', 'statuses'));
     }
@@ -23,7 +38,8 @@ class TableController extends Controller
      */
     public function create()
     {
-        //
+        $statuses = (new Table())->getStatusName();
+        return view('table.modal.create', compact('statuses'));
     }
 
     /**
@@ -31,7 +47,23 @@ class TableController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // $validated = $request->validate([
+        //     'number' => 'required|string|unique:tables,number',
+        //     'capacity' => 'required|integer|min:2|max:8',
+        //     'status_id' => 'required|exists:table_statuses,id'
+        // ]);
+        $check = Table::where('number', $request->number)->exists();
+        if (!$check) {
+            Table::create([
+                'number' => $request->number,
+                'capacity' => $request->capacity,
+                'status_id' => $request->status_id
+            ]);
+            Alert::success('Success', 'Table number already exists.');
+            return redirect()->route('tables.index');
+        } else {
+            Alert::error('Error', 'Table number already exists.');
+        }
     }
 
     /**
@@ -45,10 +77,11 @@ class TableController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Table $table)
+    public function edit($id)
     {
+        $table = Table::findOrFail($id);
         $statuses = (new Table())->getStatusName();
-        return view('table.edit', compact('table', 'statuses'));
+        return view('table.modal.edit', compact('table', 'statuses'));
     }
 
     /**
@@ -75,6 +108,7 @@ class TableController extends Controller
     public function destroy(Table $table)
     {
         $table->delete();
+        Alert::success('Table deleted successfully.');
         return redirect()->route('tables.index')->with('success', 'Table deleted successfully.');
     }
 }
