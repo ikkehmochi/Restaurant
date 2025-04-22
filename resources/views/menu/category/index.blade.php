@@ -7,36 +7,17 @@
             <div class="col-md-3">
                 <div class="input-group">
                     <span class="input-group-text"><i class="fas fa-search"></i></span>
-                    <input name="search" type="text" autocomplete="off" class="form-control" id="search" placeholder="Search table number..." value="{{ request('search') }}">
+                    <input name="search" type="text" autocomplete="off" class="form-control" id="search" placeholder="Search menu category..." value="{{ request('search') }}">
                 </div>
             </div>
-            <div class="col-md-3">
-                <div class="input-group">
-                    <span class="input-group-text"><i class="fas fa-filter"></i></span>
-                    <select name="status" class="form-select" id="status" name="status">
-                        <option value="">All Status</option>
-                        @foreach($statuses as $id => $status)
-                        <option value="{{ $id }}" {{ request('status')==$id?'selected':'' }}>{{ $status }}</option>
 
-                        @endforeach
-                    </select>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="input-group">
-                    <span class="input-group-text"><i class="fas fa-calendar"></i></span>
-                    <input name="start_date" type="date" class="form-control" id="start_date" placeholder="Start Date" value="{{ request('start_date') }}">
-                    <span class="input-group-text"><i class="fas fa-arrow-right"></i></span>
-                    <input name="end_date" type="date" class="form-control" id="end_date" placeholder="End Date" value="{{ request('end_date') }}">
-                </div>
-            </div>
             <div class="col-md-1">
                 <button type="submit" title="Filter Search" data-bs-toggle="tooltip" class="btn btn-primary w-100">
                     <i class="fas fa-filter"></i>
                 </button>
             </div>
             <div class="col-md-1">
-                <a href="{{ route('tables.index')}}" title="Reset Filter" data-bs-toggle="tooltip" id="reset-filter" name="reset-filter" type="button" class="btn btn-secondary w-100"> <i class="fas fa-undo"></i>
+                <a href="{{ route('menuCategories.index')}}" title="Reset Filter" data-bs-toggle="tooltip" id="reset-filter" name="reset-filter" type="button" class="btn btn-secondary w-100"> <i class="fas fa-undo"></i>
                 </a>
 
             </div>
@@ -44,8 +25,8 @@
     </form>
 
     <div class="col-md-12 mb-2">
-        @include('table.modal.create')
-        <a href="javascript:void(0)" class="btn btn-primary w-100" type="button" data-bs-toggle="modal" data-bs-target="#createModal">Tambahkan Table</a>
+        @include('menu.category.modal.create')
+        <a href="javascript:void(0)" class="btn btn-primary w-100" type="button" data-bs-toggle="modal" data-bs-target="#createModal">Tambahkan Kategori</a>
     </div>
     <div class="col-md-12">
         <div class="card mb-4">
@@ -56,34 +37,32 @@
                         <table class="table">
                             <thead>
                                 <tr>
-                                    <th scope="col">Table Number</th>
-                                    <th scope="col">Capacity</th>
-                                    <th scope="col">Status</th>
+                                    <th scope="col">id</th>
+                                    <th scope="col">Title</th>
+                                    <th scope="col">Slug</th>
                                     <th scope="col">Action</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($tables as $table)
+                                @foreach ($menuCategories as $category)
 
-                                @include('table.modal.edit', ['table' => $table])
+                                @include('menu.category.modal.edit', ['category' => $category])
                                 <tr>
-                                    <th scope="row">{{$table->number}}</th>
-                                    <td>{{ $table->capacity }}</td>
-                                    <td>
-                                        <span class="badge text-bg-{{ $table->status_color }}">{{ $table->status_name }}</span>
-                                    </td>
+                                    <th scope="row">{{$category->id}}</th>
+                                    <td>{{ $category->title}}</td>
+                                    <td>{{ $category->slug }}</td>
                                     <td>
                                         <div class="d-flex gap-2">
-                                            <a href="{{ route('tables.edit', parameters: $table->id) }}"
+                                            <a href="{{ route('menuCategories.edit', $category) }}"
                                                 data-bs-toggle="modal"
-                                                data-bs-target="#editModal{{ $table->id }}"
+                                                data-bs-target="#editModal{{ $category->id }}"
                                                 class="btn btn-primary btn-sm">
                                                 <i class="fas fa-edit"></i> Edit
                                             </a>
-                                            <button class="btn btn-danger btn-sm patek" id="patek" data-id="{{ $table->id }}" type="button">
+                                            <button class="btn btn-danger btn-sm delete-button" id="delete-button" data-id="{{$category->id}}" type="button">
                                                 <i class="fas fa-trash"></i> Delete
                                             </button>
-                                            <form action="{{ route('tables.destroy', $table) }}" method="POST" class="d-inline" id="delete-form-{{ $table->id }}">
+                                            <form action="{{ route('menuCategories.destroy', $category) }}" method="POST" class="d-inline" id="delete-form-{{ $category->id }}">
                                                 @csrf
                                                 @method('DELETE')
                                             </form>
@@ -100,7 +79,7 @@
         </div>
         <!-- /.card -->
         <div class="d-flex justify-content-end">
-            {{ $tables->links('pagination::bootstrap-5') }}
+            {{ $menuCategories->links('pagination::bootstrap-5') }}
         </div>
     </div>
 </div>
@@ -109,30 +88,25 @@
 </div>
 @endsection
 
-@section("script")
+@section("scripts")
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
     // Add filter functionality
     document.getElementById('filter').addEventListener('submit', function(e) {
         e.preventDefault();
         const search = document.getElementById('search').value;
-        const status = document.getElementById('status').value;
-        const startDate = document.getElementById('start_date').value;
-        const endDate = document.getElementById('end_date').value;
 
-        window.location.href = `${window.location.pathname}?search=${search}&status=${status}&start_date=${startDate}&end_date=${endDate}`;
+        window.location.href = `${window.location.pathname}?search=${search}`;
     });
 
     // Add reset filter functionality
     document.getElementById('reset-filter').addEventListener('click', function() {
         document.getElementById('search').value = '';
-        document.getElementById('status').value = '';
-        document.getElementById('start_date').value = '';
-        document.getElementById('end_date').value = '';
+
         window.location.href = window.location.pathname;
     });
 
-    document.querySelectorAll('.patek').forEach(function(button) {
+    document.querySelectorAll('.delete-button').forEach(function(button) {
         button.addEventListener('click', function(e) {
             e.preventDefault();
 
@@ -141,7 +115,7 @@
 
             Swal.fire({
                 title: "Yakin ingin Menghapus?",
-                text: "Aksi ini akan menghapus Table id " + id,
+                text: "Aksi ini akan menghapus Menu Category " + id,
                 icon: "warning",
                 showCancelButton: true,
                 confirmButtonText: "Ya, Hapus!",

@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\MenuCategory;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -16,6 +17,10 @@ class DatabaseSeeder extends Seeder
             TableStatus::class,
             TableSeeder::class,
             RoleSeeder::class,
+            MenuCategorySeeder::class,
+            MenuSeeder::class,
+            OrderStatusSeeder::class,
+            OrderSeeder::class,
         ]);
     }
 }

@@ -16,7 +16,7 @@ return new class extends Migration
             $table->unsignedBigInteger('user_id')->nullable();
             $table->unsignedBigInteger('table_id')->nullable();
             $table->unsignedBigInteger('order_status_id')->default(1);
-            $table->decimal('total_price', 10, 2)->default(0);
+            $table->double('total_price')->default(0);
             $table->string('payment_method')->nullable();
             $table->string('payment_status')->nullable();
             $table->timestamps();

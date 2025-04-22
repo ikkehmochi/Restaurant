@@ -41,6 +41,35 @@
                     <p>Tables</p>
                 </a>
             </li>
+            <li class="nav-item">
+                <a href="#" class="nav-link">
+                    <i class=" nav-icon fa-solid fa-book-open"></i>
+                    <p>Menu</p>
+                    <i class="nav-arrow bi bi-chevron-right"></i>
+
+                </a>
+
+                <ul class="nav nav-treeview">
+                    <li class="nav-item">
+                        <a href={{ route('menus.index') }} class="nav-link">
+                            <i class="nav-icon bi bi-circle"></i>
+                            <p>Menu Items</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href={{ route('menuCategories.index') }} class="nav-link">
+                            <i class="nav-icon bi bi-circle"></i>
+                            <p>Menu Categories</p>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            <li class="nav-item">
+                <a href={{ route('orders.index') }} class="nav-link">
+                    <i class="fa-solid fa-note-sticky"></i>
+                    <p>Orders</p>
+                </a>
+            </li>
         </ul>
         <!--end::Sidebar Menu-->
     </nav>

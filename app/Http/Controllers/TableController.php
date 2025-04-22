@@ -33,6 +33,7 @@ class TableController extends Controller
         return view('table.index', data: compact('tables', 'statuses'));
     }
 
+
     /**
      * Show the form for creating a new resource.
      */

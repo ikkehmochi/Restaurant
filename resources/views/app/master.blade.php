@@ -4,7 +4,7 @@
 
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>AdminLTE 4 | Simple Tables</title>
+    <title>AdminLTE 4</title>
     <!--begin::Primary Meta Tags-->
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="title" content="AdminLTE 4 | Simple Tables" />
@@ -45,6 +45,8 @@
 <!--begin::Body-->
 
 <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
+    @include('sweetalert::alert')
+
     <!--begin::App Wrapper-->
     <div class="app-wrapper">
         <!--begin::Header-->
@@ -58,12 +60,12 @@
                 <a href="../index.html" class="brand-link">
                     <!--begin::Brand Image-->
                     <img
-                        src="../../../dist/assets/img/AdminLTELogo.png"
-                        alt="AdminLTE Logo"
+                        src={{ asset('icons/healthy-food.png') }}
+                        alt="Restaurant Logo"
                         class="brand-image opacity-75 shadow" />
                     <!--end::Brand Image-->
                     <!--begin::Brand Text-->
-                    <span class="brand-text fw-light">AdminLTE 4</span>
+                    <span class="brand-text fw-light">Restaurant</span>
                     <!--end::Brand Text-->
                 </a>
                 <!--end::Brand Link-->
@@ -80,14 +82,7 @@
             <div class="app-content-header">
                 <!--begin::Container-->
                 <div class="container-fluid">
-                    <!--begin::Row-->
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <h3 class="mb-0">Simple Tables</h3>
-                        </div>
 
-                    </div>
-                    <!--end::Row-->
                 </div>
                 <!--end::Container-->
             </div>
@@ -161,7 +156,7 @@
             }
         });
     </script>
-    @yield("script");
+    @yield('scripts')
     <!--end::OverlayScrollbars Configure-->
     <!--end::Script-->
 </body>
