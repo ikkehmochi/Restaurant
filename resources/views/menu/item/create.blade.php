@@ -36,6 +36,15 @@
                 @error('category_id')<div class="invalid-feedback">{{ $message }}</div>@enderror
             </div>
             <div class="mb-3">
+                <label for="ingredients" class="form-label">Ingredients</label>
+                <select id="ingredients" name="ingredients[]" class="form-control" multiple>
+                    @foreach ($ingredients as $ingredient)
+                    <option value="{{ $ingredient->id }}" {{ in_array($ingredient->id, old('ingredients', [])) ? 'selected' : '' }}>
+                        {{ $ingredient->name }}
+                        @endforeach
+                </select>
+            </div>
+            <div class="mb-3">
                 <label for="description" class="form-label">Description</label>
                 <textarea name="description" class="form-control @error('description') is-invalid @enderror">{{ old('description') }}</textarea>
                 @error('description')<div class="invalid-feedback">{{ $message }}</div>@enderror
@@ -79,5 +88,13 @@
         value = value.replace(/[^\d]/g, '');
         this.value = value ? new Intl.NumberFormat('id-ID').format(value) : '';
     });
+</script>
+<script>
+    $(document).ready(function() {
+        $("#ingredients").select2({
+            placholder: "Choose Ingredients",
+            allowClear: true,
+        })
+    })
 </script>
 @endsection

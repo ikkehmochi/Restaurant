@@ -6,6 +6,7 @@ use App\Http\Controllers\TableController;
 use App\Http\Controllers\MenuController;
 use App\Http\Controllers\MenuCategoryController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\IngredientController;
 
 
 
@@ -51,4 +52,14 @@ Route::group(['prefix' => 'orders'], function () {
     Route::get('/{order}/edit', [OrderController::class, 'edit'])->name('orders.edit');
     Route::patch('/{order}', [OrderController::class, 'update'])->name('orders.update');
     Route::delete('/{order}', [OrderController::class, 'destroy'])->name('orders.destroy');
+});
+
+Route::group(['prefix' => 'ingredients'], function () {
+    Route::get('/', [IngredientController::class, 'index'])->name('ingredients.index');
+    Route::get('/create', [IngredientController::class, 'create'])->name('ingredients.create');
+    Route::post('/', [IngredientController::class, 'store'])->name('ingredients.store');
+    Route::get('/{ingredient}', [IngredientController::class, 'show'])->name('ingredients.show');
+    Route::get('/{ingredient}/edit', [IngredientController::class, 'edit'])->name('ingredients.edit');
+    Route::patch('/{ingredient}', [IngredientController::class, 'update'])->name('ingredients.update');
+    Route::delete('/{ingredient}', [IngredientController::class, 'destroy'])->name('ingredients.destroy');
 });

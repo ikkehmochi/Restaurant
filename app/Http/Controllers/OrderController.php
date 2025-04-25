@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\order;
+use App\Models\Order;
 use App\Http\Requests\StoreorderRequest;
 use App\Http\Requests\UpdateorderRequest;
 
@@ -14,9 +14,7 @@ class OrderController extends Controller
     public function index()
     {
         // Fetch all orders from the database
-        $orders = order::all();
-
-        // Return the view with the orders data
+        $orders = Order::with(relations: ['status', 'users', 'table'])->paginate(10);
         return view('order.index', compact('orders'));
     }
 
@@ -42,6 +40,7 @@ class OrderController extends Controller
     public function show(order $order)
     {
         //
+        return view('order.show', compact('order'));
     }
 
     /**
@@ -65,6 +64,10 @@ class OrderController extends Controller
      */
     public function destroy(order $order)
     {
-        //
+        // Delete the order from the database
+        $order->delete();
+
+        // Redirect back to the orders index with a success message
+        return redirect()->route('orders.index')->with('success', 'Order deleted successfully.');
     }
 }

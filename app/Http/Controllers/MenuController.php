@@ -6,6 +6,7 @@ use App\Models\Menu;
 use App\Models\MenuCategory;
 use App\Http\Requests\StoreMenuRequest;
 use App\Http\Requests\UpdateMenuRequest;
+use App\Models\Ingredient;
 use Illuminate\Http\Request;
 use RealRashid\SweetAlert\Facades\Alert;
 
@@ -42,7 +43,8 @@ class MenuController extends Controller
     public function create()
     {
         $categories = MenuCategory::all();
-        return view('menu.item.create', compact('categories'));
+        $ingredients = Ingredient::all();
+        return view('menu.item.create', compact(['categories', 'ingredients']));
     }
 
     /**
@@ -65,7 +67,16 @@ class MenuController extends Controller
             $validatedData['image'] = 'images/menu/' . $imageName;
         }
 
-        Menu::create($validatedData);
+        $menu = Menu::create($validatedData);
+        $pivotData = [];
+        foreach ($request->input('ingredients', []) as $ingredientId => $ingredientData) {
+            if (isset($ingredientData['selected'])) {
+                $pivotData[$ingredientId] = [
+                    'quantity' => $ingredientData['quantity'],
+                ];
+            }
+        }
+        $menu->ingredients()->attach($pivotData);
 
         Alert::success('Success', 'Menu created successfully.');
         return redirect()->route('menus.index');
@@ -76,7 +87,7 @@ class MenuController extends Controller
      */
     public function show(Menu $menu)
     {
-        //
+        return view('menu.item.modal.show', compact('menu'));
     }
 
     /**
@@ -85,7 +96,8 @@ class MenuController extends Controller
     public function edit(Menu $menu)
     {
         $categories = MenuCategory::all();
-        return view('menu.item.edit', compact('menu', 'categories'));
+        $ingredients = Ingredient::all();
+        return view('menu.item.edit', compact('menu', ['categories', 'ingredients']));
     }
 
     /**
@@ -95,7 +107,23 @@ class MenuController extends Controller
     {
         $validatedData = $request->validated();
         $validatedData['updated_at'] = now();
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
+            $imageName = time() . '.' . $image->getClientOriginalExtension();
+            $image->move(public_path('images/menu'), $imageName);
+            $validatedData['image'] = 'images/menu/' . $imageName;
+        }
+
         $menu->update($validatedData);
+        $pivotData = [];
+        foreach ($request->input('ingredients', []) as  $ingredientId => $ingredientData) {
+            if (isset($ingredientData['selected'])) {
+                $pivotData[$ingredientId] = [
+                    'quantity' => $ingredientData['quantity'],
+                ];
+            }
+        }
+        $menu->ingredients()->sync($pivotData);
         return view(route('menus.index'));
     }
 

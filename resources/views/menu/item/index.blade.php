@@ -38,6 +38,7 @@
     </div>
     <div class="row">
         @foreach ($menus as $menu)
+        @include('menu.item.modal.show', ['menu' => $menu])
         <div class="col-md-2 mb-4">
             <div class="card h-100">
                 <img src={{ $menu->image? asset($menu->image):asset('icons/healthy-food.png') }} class="card-img-top img-fluid mx-auto mt-2 w-75" alt="...">
@@ -52,18 +53,18 @@
 
                     <p>{{ $menu->description }}</p>
                 </div>
-                <div class="card-footer align-items-center d-flex justify-content-between">
-                    <button class="btn btn-danger btn-sm w-100 me-1 delete-button" title="Delete Menu" data-bs-toggle="tooltip" id="delete-button" data-id="{{ $menu->id }}" type="button">
-                        <i class="fas fa-trash"></i><br>Delete
+                <div class="card-footer align-items-center d-flex justify-content-between</div>">
+                    <button class="btn btn-primary btn-sm me-1" data-bs-toggle="modal" data-bs-target="#showModal{{ $menu->id }}" data-bs-toggle="tooltip" title="Show"> <i class="fa-solid fa-eye"></i></button>
+                    <a href="{{ route('menus.edit', parameters: $menu) }}" title="Edit Menu" data-bs-toggle="tooltip" class="btn btn-success btn-sm ms-1 me-1">
+                        <i class="fas fa-edit"></i>
+                    </a>
+                    <button class="btn btn-danger btn-sm  delete-button ms-1" title="Delete Menu" data-bs-toggle="tooltip" id="delete-button" data-id="{{ $menu->id }}" type="button">
+                        <i class="fas fa-trash"></i>
                     </button>
                     <form action="{{ route('menus.destroy', $menu) }}" method="POST" class="d-inline" id="delete-form-{{ $menu->id }}">
                         @csrf
                         @method('DELETE')
-
                     </form>
-                    <a href="{{ route('menus.edit', parameters: $menu) }}" title="Edit Menu" data-bs-toggle="tooltip" class="btn btn-primary btn-sm w-100 ms-1">
-                        <i class="fas fa-edit"></i> <br>Edit
-                    </a>
                 </div>
 
             </div>
@@ -77,7 +78,7 @@
     {{ $menus->links('pagination::bootstrap-5') }}
 </div>
 @endsection
-@section('script')
+@section('scripts')
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
     // Add filter functionality

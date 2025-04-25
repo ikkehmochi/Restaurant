@@ -37,6 +37,15 @@
                 @error('category_id')<div class="invalid-feedback">{{ $message }}</div>@enderror
             </div>
             <div class="mb-3">
+                <label for="ingredients" class="form-label">Ingredients</label>
+                <select id="ingredients" name="ingredients[]" class="form-control" multiple>
+                    @foreach ($ingredients as $ingredient)
+                    <option value="{{ $ingredient->id }}" {{ in_array($ingredient->id, $menu->ingredients->pluck('id')->toArray())? 'selected': '' }}>
+                        {{ $ingredient->name }}
+                        @endforeach
+                </select>
+            </div>
+            <div class="mb-3">
                 <label for="description" class="form-label">Description</label>
                 <textarea name="description" class="form-control @error('description') is-invalid @enderror">{{ $menu->description }}</textarea>
                 @error('description')<div class="invalid-feedback">{{ $message }}</div>@enderror
@@ -49,7 +58,7 @@
                     @error('image')<div class="invalid-feedback">{{ $message }}</div>@enderror
                 </div>
                 <div class="mt-2">
-                    <img id="preview" src="{{ asset($menu->image) }}" alt="Preview" style="max-width: 200px; display: block;">
+                    <img id="preview" src="{{ $menu->image? asset($menu->image): asset('icons/healthy-food.png') }}" alt="Preview" style="max-width: 200px; display: block;">
                 </div>
             </div>
         </div>
@@ -80,5 +89,13 @@
         value = value.replace(/[^\d]/g, '');
         this.value = value ? new Intl.NumberFormat('id-ID').format(value) : '';
     });
+</script>
+<script>
+    $(document).ready(function() {
+        $("#ingredients").select2({
+            placholder: "Choose Ingredients",
+            allowClear: true,
+        })
+    })
 </script>
 @endsection

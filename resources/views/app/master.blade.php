@@ -39,6 +39,8 @@
     <!--end::Third Party Plugin(Bootstrap Icons)-->
     <!--begin::Required Plugin(AdminLTE)-->
     <link rel="stylesheet" href="{{asset("tpl/css/adminlte.css")}}" />
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
     <!--end::Required Plugin(AdminLTE)-->
 </head>
 <!--end::Head-->
@@ -156,6 +158,12 @@
             }
         });
     </script>
+    <!-- jQuery (required) -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- Select2 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
     @yield('scripts')
     <!--end::OverlayScrollbars Configure-->
     <!--end::Script-->

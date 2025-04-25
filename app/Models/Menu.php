@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Menu extends Model
 {
@@ -18,8 +19,14 @@ class Menu extends Model
     ];
     /** @use HasFactory<\Database\Factories\MenuFactory> */
     use HasFactory;
+
     public function category()
     {
         return $this->belongsTo(MenuCategory::class);
+    }
+
+    public function ingredients(): BelongsToMany
+    {
+        return $this->belongsToMany(Ingredient::class)->withPivot('quantity');
     }
 }

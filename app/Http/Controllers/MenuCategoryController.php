@@ -28,6 +28,7 @@ class MenuCategoryController extends Controller
      */
     public function create()
     {
+
         return view('menu.category.model.create');
     }
 

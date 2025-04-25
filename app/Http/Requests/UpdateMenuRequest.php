@@ -21,7 +21,7 @@ class UpdateMenuRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
+        $rules = [
             'name' => 'sometimes|required|string|max:255',
             'price' => 'sometimes|required|string',
             'category_id' => 'sometimes|required|exists:menu_categories,id',
@@ -29,6 +29,14 @@ class UpdateMenuRequest extends FormRequest
             'image' => 'sometimes|nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
 
         ];
+        if ($this->has('ingredients')) {
+            foreach ($this->input('ingredients') as $ingredientId => $ingredientData) {
+                if (isset($ingredientData['selected'])) {
+                    $rules['ingredients.' . $ingredientId . '.quantity'] = 'required|numeric|min:1';
+                }
+            }
+        }
+        return $rules;
     }
     protected function prepareForValidation()
     {

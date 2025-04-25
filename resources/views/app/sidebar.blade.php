@@ -66,9 +66,16 @@
             </li>
             <li class="nav-item">
                 <a href={{ route('orders.index') }} class="nav-link">
-                    <i class="fa-solid fa-note-sticky"></i>
+                    <i class=" nav-icon fa-solid fa-note-sticky"></i>
                     <p>Orders</p>
                 </a>
+            </li>
+            <li class="nav-item">
+                <a href={{route('ingredients.index')  }} class="nav-link">
+                    <img src={{ asset('icons/ingredients-grey.png') }} style="height: 1.25rem; width: 1.25rem;" alt="ingredients icon">
+                    <p>Ingredients</p>
+                </a>
+
             </li>
         </ul>
         <!--end::Sidebar Menu-->

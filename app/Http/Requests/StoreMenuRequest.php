@@ -21,13 +21,22 @@ class StoreMenuRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
+        $rules = [
             'name' => 'required|string|max:255',
             'price' => 'required|string',
             'category_id' => 'required|exists:menu_categories,id',
             'description' => 'nullable|string',
             'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048'
         ];
+
+        if ($this->has('ingredients')) {
+            foreach ($this->input('ingredients') as $ingredientId => $ingredientData) {
+                if (isset($ingredientData['selected'])) {
+                    $rules['ingredients.' . $ingredientId . '.quantity'] = 'required|numeric|min:1';
+                }
+            }
+        }
+        return $rules;
     }
 
     protected function prepareForValidation()

@@ -13,22 +13,30 @@ class Order extends Model
 
     protected $fillable = [
         'user_id',
-        'total_amount',
-        'status',
+        'table_id',
+        'order_status_id',
+        'total_price',
+        'payment_method',
         'payment_status',
-        'notes'
+
     ];
 
     protected $casts = [
-        'total_amount' => 'decimal:2',
         'created_at' => 'datetime',
         'updated_at' => 'datetime'
     ];
 
-
+    public function users()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+    public function table()
+    {
+        return $this->belongsTo(Table::class, 'table_id');
+    }
 
     public function status()
     {
-        return $this->belongsTo(OrderStatus::class);
+        return $this->belongsTo(OrderStatus::class, 'order_status_id');
     }
 }
