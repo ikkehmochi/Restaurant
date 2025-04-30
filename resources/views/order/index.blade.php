@@ -48,14 +48,16 @@
 </style>
 
 @section('content')
-
+<div class="col-md-12 mb-2">
+    <a href={{ route('orders.create') }} class="btn btn-primary w-100" type="button" data-bs-toggle="tooltip" title="Create New Order">Tambahkan Pesanan Baru</a>
+</div>
 <!-- /.card-header -->
 <div class="card-body p-0">
     <table class="table text-center">
         <thead class="text-center">
             <tr>
                 <th style="width: 20px">#</th>
-                <th>User</th>
+                <th>Customer</th>
                 <th>Table</th>
                 <th>Status</th>
                 <th>Total Price</th>
@@ -67,8 +69,8 @@
             @foreach ($orders as $order )
             <tr class="align-middle">
                 <td>{{ $order->id }}</td>
-                <td class="text-start"> <img src={{ asset($order->users->profile_picture) }} alt="{{ $order->users->name }}" class="user-image rounded-circle shadow">
-                    {{ $order->users->name }}
+                <td class="text-start">
+                    {{ $order->customer_name }}
                 </td>
                 <td>{{ $order->table->number }}</td>
                 <td class="text-center"><span class="badge rounded-pill {{ $order->status->slug }}" style="width: 70px; font-size: 12px;">{{ Str::upper($order->status->title)}}</span></td>

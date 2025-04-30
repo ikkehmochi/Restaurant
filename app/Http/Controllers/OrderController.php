@@ -5,6 +5,11 @@ namespace App\Http\Controllers;
 use App\Models\Order;
 use App\Http\Requests\StoreorderRequest;
 use App\Http\Requests\UpdateorderRequest;
+use App\Models\Ingredient;
+use App\Models\Table;
+use App\Models\Menu;
+
+use function PHPUnit\Framework\returnSelf;
 
 class OrderController extends Controller
 {
@@ -14,7 +19,7 @@ class OrderController extends Controller
     public function index()
     {
         // Fetch all orders from the database
-        $orders = Order::with(relations: ['status', 'users', 'table'])->paginate(10);
+        $orders = Order::with(relations: ['status', 'table'])->paginate(10);
         return view('order.index', compact('orders'));
     }
 
@@ -23,7 +28,9 @@ class OrderController extends Controller
      */
     public function create()
     {
-        //
+        $tables = Table::all();
+        $menus = Menu::all();
+        return (view('order.create', compact(['tables', 'menus'])));
     }
 
     /**

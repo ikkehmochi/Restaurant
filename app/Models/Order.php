@@ -12,7 +12,7 @@ class Order extends Model
 
 
     protected $fillable = [
-        'user_id',
+        'customer_name',
         'table_id',
         'order_status_id',
         'total_price',
@@ -26,10 +26,6 @@ class Order extends Model
         'updated_at' => 'datetime'
     ];
 
-    public function users()
-    {
-        return $this->belongsTo(User::class, 'user_id');
-    }
     public function table()
     {
         return $this->belongsTo(Table::class, 'table_id');

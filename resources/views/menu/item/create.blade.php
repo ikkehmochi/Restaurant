@@ -43,7 +43,9 @@
                         {{ $ingredient->name }}
                         @endforeach
                 </select>
+                <div id="ingredient_quantities"></div>
             </div>
+
             <div class="mb-3">
                 <label for="description" class="form-label">Description</label>
                 <textarea name="description" class="form-control @error('description') is-invalid @enderror">{{ old('description') }}</textarea>
@@ -91,10 +93,42 @@
 </script>
 <script>
     $(document).ready(function() {
-        $("#ingredients").select2({
-            placholder: "Choose Ingredients",
-            allowClear: true,
-        })
-    })
+        let allIngredients = @json($ingredients);
+
+        $('#ingredients').select2({
+            placeholder: "Choose ingredients...",
+            allowClear: true
+        });
+
+        function renderQuantities(selectedIngredients) {
+            let container = $('#ingredient_quantities');
+            container.html('');
+
+            selectedIngredients.forEach(function(id) {
+                let ingredient = allIngredients.find(i => i.id == id);
+                if (ingredient) {
+                    container.append(`
+                    <div class="form-group">
+                        <label>${ingredient.name} Quantity</label>
+                        <input type="number" name="ingredients[${ingredient.id}][quantity]" class="form-control form-control-sm d-inline-block w-auto" placeholder="Enter ${ingredient.name} quantity">
+                        <input type="hidden" name="ingredients[${ingredient.id}][selected]" value="1">
+                    </div>
+                `);
+                }
+            });
+        }
+
+        $('#ingredients').on('change', function() {
+            let selected = $(this).val(); // array of selected ingredient IDs
+            renderQuantities(selected || []);
+        });
+
+        // Trigger once at start if editing
+        let selected = $('#ingredients').val();
+        if (selected) {
+            renderQuantities(selected);
+        }
+    });
 </script>
+
 @endsection

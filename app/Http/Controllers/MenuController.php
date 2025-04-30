@@ -55,7 +55,7 @@ class MenuController extends Controller
         $validatedData = $request->validated();
 
         // Convert price from string to integer
-        $validatedData['price'] = (int) $validatedData['price'];
+        $validatedData['price'] = (int) str_replace('.', '', $validatedData['price']);
         $validatedData['created_at'] = now();
         $validatedData['updated_at'] = now();
 
@@ -68,15 +68,21 @@ class MenuController extends Controller
         }
 
         $menu = Menu::create($validatedData);
-        $pivotData = [];
-        foreach ($request->input('ingredients', []) as $ingredientId => $ingredientData) {
-            if (isset($ingredientData['selected'])) {
-                $pivotData[$ingredientId] = [
-                    'quantity' => $ingredientData['quantity'],
-                ];
+
+        // Handle ingredients
+        if ($request->has('ingredients')) {
+            $pivotData = [];
+            foreach ($request->input('ingredients') as $ingredientId => $data) {
+                if (!empty($data['quantity'])) {
+                    $pivotData[$ingredientId] = [
+                        'quantity' => $data['quantity']
+                    ];
+                }
+            }
+            if (!empty($pivotData)) {
+                $menu->ingredients()->attach($pivotData);
             }
         }
-        $menu->ingredients()->attach($pivotData);
 
         Alert::success('Success', 'Menu created successfully.');
         return redirect()->route('menus.index');
@@ -86,7 +92,9 @@ class MenuController extends Controller
      * Display the specified resource.
      */
     public function show(Menu $menu)
+
     {
+        $menu->load(['ingredients', 'category']);
         return view('menu.item.modal.show', compact('menu'));
     }
 
@@ -95,9 +103,13 @@ class MenuController extends Controller
      */
     public function edit(Menu $menu)
     {
+        $menu->load('ingredients');
         $categories = MenuCategory::all();
         $ingredients = Ingredient::all();
-        return view('menu.item.edit', compact('menu', ['categories', 'ingredients']));
+        $selectedIngredients = $menu->ingredients->mapWithKeys(function ($item) {
+            return [$item->id => $item->pivot->quantity];
+        });
+        return view('menu.item.edit', compact('menu', ["menu", 'categories', 'ingredients', 'selectedIngredients']));
     }
 
     /**
@@ -115,16 +127,23 @@ class MenuController extends Controller
         }
 
         $menu->update($validatedData);
+
+        // Fix: handle ingredient quantities correctly
         $pivotData = [];
-        foreach ($request->input('ingredients', []) as  $ingredientId => $ingredientData) {
-            if (isset($ingredientData['selected'])) {
-                $pivotData[$ingredientId] = [
-                    'quantity' => $ingredientData['quantity'],
-                ];
+        if ($request->has('ingredients')) {
+            foreach ($request->input('ingredients') as $ingredientId => $ingredientData) {
+                if (isset($ingredientData['selected']) && isset($ingredientData['quantity'])) {
+                    $pivotData[$ingredientId] = [
+                        'quantity' => $ingredientData['quantity'],
+                    ];
+                }
             }
         }
         $menu->ingredients()->sync($pivotData);
-        return view(route('menus.index'));
+
+        // Fix: redirect to menus.index instead of returning a view
+        Alert::success('Success', 'Menu updated successfully.');
+        return redirect()->route('menus.index')->with('success', 'Menu updated successfully.');
     }
 
     /**

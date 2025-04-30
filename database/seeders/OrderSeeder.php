@@ -18,7 +18,7 @@ class OrderSeeder extends Seeder
 
         for ($i = 0; $i < 10; $i++) {
             DB::table('orders')->insert([
-                'user_id' => $faker->numberBetween(1, 4),
+                'customer_name' => $faker->name,
                 'table_id' => $faker->numberBetween(1, 20),
                 'order_status_id' => $faker->numberBetween(1, 4),
                 'total_price' => $faker->randomFloat(2, 10, 500),

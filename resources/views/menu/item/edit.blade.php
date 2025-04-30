@@ -42,8 +42,10 @@
                     @foreach ($ingredients as $ingredient)
                     <option value="{{ $ingredient->id }}" {{ in_array($ingredient->id, $menu->ingredients->pluck('id')->toArray())? 'selected': '' }}>
                         {{ $ingredient->name }}
-                        @endforeach
+                    </option>
+                    @endforeach
                 </select>
+                <div id="ingredient_quantities"></div>
             </div>
             <div class="mb-3">
                 <label for="description" class="form-label">Description</label>
@@ -92,10 +94,43 @@
 </script>
 <script>
     $(document).ready(function() {
-        $("#ingredients").select2({
-            placholder: "Choose Ingredients",
-            allowClear: true,
-        })
-    })
+        // selectedIngredientsQuantities: {ingredientId: quantity, ...}
+        let selectedIngredientsQuantities = @json($selectedIngredients);
+        let allIngredients = @json($ingredients);
+
+        $('#ingredients').select2({
+            placeholder: "Choose ingredients...",
+            allowClear: true
+        });
+
+        function renderQuantities(selectedIngredients) {
+            let container = $('#ingredient_quantities');
+            container.html('');
+
+            selectedIngredients.forEach(function(id) {
+                let ingredient = allIngredients.find(i => i.id == id);
+                if (ingredient) {
+                    let quantity = selectedIngredientsQuantities[id] || '';
+                    container.append(`
+                        <div class="form-group mb-2">
+                            <label>${ingredient.name} Quantity</label>
+                            <input type="number" step="any" min="0" name="ingredients[${ingredient.id}][quantity]" class="form-control form-control-sm d-inline-block w-auto" placeholder="Enter ${ingredient.name} quantity" value="${quantity}">
+                            <input type="hidden" name="ingredients[${ingredient.id}][selected]" value="1">
+                        </div>
+                    `);
+                }
+            });
+        }
+
+        $('#ingredients').on('change', function() {
+            let selected = $(this).val() || [];
+            // Convert all values to string for consistency
+            renderQuantities(selected.map(String));
+        });
+
+        // Initial render for edit
+        let selected = $('#ingredients').val() || [];
+        renderQuantities(selected.map(String));
+    });
 </script>
 @endsection
