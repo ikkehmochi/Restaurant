@@ -2,8 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\Ingredient;
-use App\Models\MenuCategory;
+
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -22,7 +21,6 @@ class DatabaseSeeder extends Seeder
             IngredientSeeder::class,
             MenuSeeder::class,
             IngredientMenuSeeder::class,
-            OrderStatusSeeder::class,
             OrderSeeder::class,
         ]);
     }

@@ -17,7 +17,6 @@ return new class extends Migration
             $table->foreignId('menu_id')->constrained(table: 'menus', column: 'id')->onDelete('cascade');
             $table->foreignId('ingredient_id')->constrained(table: 'ingredients', column: 'id')->onDelete('cascade');
             $table->integer('quantity')->nullable(false)->default(0);
-            $table->timestamps();
         });
     }
 
@@ -26,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        //
+        Schema::dropIfExists('ingredient_menu');
     }
 };

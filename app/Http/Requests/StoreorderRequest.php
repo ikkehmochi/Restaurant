@@ -23,10 +23,17 @@ class StoreOrderRequest extends FormRequest
     {
         $rules = [
             'customer_name' => 'required|string|max:255',
-            'table_id' => 'required|exist_tables,id',
+            'table_id' => 'required|exists:tables,id',
             'total_price' => 'required|numeric',
-            'description' => 'nullable|string',
+            'notes' => 'nullable|string',
         ];
-        return [];
+        if ($this->has('menus')) {
+            foreach ($this->input('menus') as $menuId => $menuData) {
+                if (isset($menuData['selected'])) {
+                    $rules['menus.' . $menuId . '.quantity'] = 'required|numeric|min:1';
+                }
+            }
+        }
+        return $rules;
     }
 }

@@ -15,10 +15,11 @@ return new class extends Migration
             $table->id();
             $table->string('customer_name')->default("Guest");
             $table->unsignedBigInteger('table_id')->nullable();
-            $table->unsignedBigInteger('order_status_id')->default(1);
+            $table->string('status')->default('pending');
             $table->double('total_price')->default(0);
-            $table->string('payment_method')->nullable();
-            $table->string('payment_status')->nullable();
+            $table->string('notes')->nullable(true);
+            $table->string('payment_method')->nullable(false)->default('cash');
+            $table->string('payment_status')->nullable(false)->default('pending');
             $table->timestamps();
         });
     }

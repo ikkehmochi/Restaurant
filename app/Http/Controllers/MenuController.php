@@ -130,6 +130,7 @@ class MenuController extends Controller
 
         // Fix: handle ingredient quantities correctly
         $pivotData = [];
+        dd($request->all());
         if ($request->has('ingredients')) {
             foreach ($request->input('ingredients') as $ingredientId => $ingredientData) {
                 if (isset($ingredientData['selected']) && isset($ingredientData['quantity'])) {
@@ -152,6 +153,7 @@ class MenuController extends Controller
     public function destroy(Menu $menu)
     {
         $menu->delete();
+
         Alert::success('Menu deleted successfully.');
         return redirect()->route('menus.index')->with('success', 'Menu deleted successfully.');
     }

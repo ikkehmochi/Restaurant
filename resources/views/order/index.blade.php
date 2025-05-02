@@ -73,12 +73,12 @@
                     {{ $order->customer_name }}
                 </td>
                 <td>{{ $order->table->number }}</td>
-                <td class="text-center"><span class="badge rounded-pill {{ $order->status->slug }}" style="width: 70px; font-size: 12px;">{{ Str::upper($order->status->title)}}</span></td>
+                <td class="text-center"><span class="badge rounded-pill {{ $order->status_label }}" style="width: 70px; font-size: 12px;">{{ $order->status }}</span></td>
                 <td>{{ $order->total_price }}</td>
                 <td>Pembayaran : {{$order->payment_method }} <br> <span class="badge rounded-pill payment-{{ Str::lower($order->payment_status) }}" style="width: 100px">{{ Str::upper($order->payment_status)}}</span></td>
                 <td>
                     <a href={{ route('orders.show', $order) }} type="button" class="btn btn-primary"><i class="fa-solid fa-eye"></i></a>
-                    <a href="#" type="button" class="btn btn-warning"><i class="fa-solid fa-pen-to-square"></i></a>
+                    <a href={{ route('orders.edit', $order) }} type="button" class="btn btn-warning"><i class="fa-solid fa-pen-to-square"></i></a>
 
                     <button class="btn btn-danger delete-button" title="Delete Order" data-bs-toggle="tooltip" data-id="{{ $order->id }}" type="button">
                         <i class="fa-solid fa-trash"></i>

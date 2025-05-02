@@ -11,7 +11,7 @@ class UpdateOrderRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -21,8 +21,19 @@ class UpdateOrderRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
-            //
+        $rules = [
+            'customer_name' => 'sometimes|required|string|max:255',
+            'table_id' => 'sometimes|required|exists:tables,id',
+            'total_price' => 'sometimes|required|numeric',
+            'notes' => 'sometimes|nullable|string',
         ];
+        if ($this->has('menus')) {
+            foreach ($this->input('menus') as $menuId => $menuData) {
+                if (isset($menuData['selected'])) {
+                    $rules['menus.' . $menuId . '.quantity'] = 'sometimes|required|numeric|min:1';
+                }
+            }
+        }
+        return $rules;
     }
 }

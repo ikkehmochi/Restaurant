@@ -43,4 +43,8 @@ class Table extends Model
     {
         return $this->belongsTo(TableStatus::class, 'status_id');
     }
+    public function tableOrders()
+    {
+        return $this->hasMany(Order::class);
+    }
 }

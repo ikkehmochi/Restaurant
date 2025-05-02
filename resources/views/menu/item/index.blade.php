@@ -84,7 +84,7 @@
             <div class="card" style="width: 100%">
                 <div class="row">
                     <div class="col-12 card-main" style="text-align: center; height: 300px;">
-                        <img src={{ $menu->image? asset($menu->image):asset('icons/healthy-food.png') }} class="card-img-top img-fluid mx-auto mt-2 w-75" alt="..." style="max-height: 150px; max-width: 150px;">
+                        <img src={{ $menu->image? asset($menu->image):asset('icons/healthy-food.png') }} class="card-img-top img-fluid mx-auto mt-2" alt="..." style="height: 75px;width: 75px;">
                         <div class="card-body">
                             <h5 class="text-center fw-bold">{{ $menu->name }}</h5>
                             <h6 class="text-center fw-medium text-muted">
@@ -98,7 +98,7 @@
                     </div>
 
                     <div class="col-12" style="text-align: center; margin-bottom: 10px;">
-                        <a href="{{ route('menus.edit', parameters: $menu) }}" title="Edit Menu" data-bs-toggle="tooltip" data-bs-placement="top" class="btn btn-success btn-md ms-1 me-1">
+                        <a href="{{ route('menus.edit', parameters: $menu) }}" title="Edit Menu" data-bs-toggle="tooltip" data-bs-placement="top" class="btn btn-warning btn-md ms-1 me-1">
                             <i class="fas fa-edit"></i>
                         </a>
                         <button class="btn btn-danger btn-md  delete-button ms-1" title="Delete Menu" data-bs-toggle="tooltip" data-bs-placement="top" id="delete-button" data-id="{{ $menu->id }}" type="button">

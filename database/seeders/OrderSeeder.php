@@ -20,10 +20,11 @@ class OrderSeeder extends Seeder
             DB::table('orders')->insert([
                 'customer_name' => $faker->name,
                 'table_id' => $faker->numberBetween(1, 20),
-                'order_status_id' => $faker->numberBetween(1, 4),
+                'status' => $faker->randomElement(['pending', 'preparing', 'completed', 'cancelled']),
                 'total_price' => $faker->randomFloat(2, 10, 500),
-                'payment_method' => $faker->randomElement(['cash', 'credit_card', 'debit_card']),
-                'payment_status' => $faker->randomElement(['pending', 'completed', 'failed']),
+                'notes' => $faker->words(10, true),
+                'payment_method' => $faker->randomElement(['cash', 'credit', 'debit', 'qris']),
+                'payment_status' => $faker->randomElement(['unpaid', 'paid', 'refunded', 'failed']),
                 'created_at' => $faker->dateTimeBetween('-1 month', 'now'),
                 'updated_at' => now()
             ]);
