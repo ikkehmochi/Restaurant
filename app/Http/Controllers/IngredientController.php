@@ -61,6 +61,10 @@ class IngredientController extends Controller
     {
         return view('ingredients.modal.edit', compact('ingredient'));
     }
+    public function stockEdit(Ingredient $ingredient)
+    {
+        return view('ingredients.modal.stockEdit', compact($ingredient));
+    }
 
     /**
      * Update the specified resource in storage.

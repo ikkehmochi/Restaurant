@@ -10,6 +10,7 @@ use App\Models\Ingredient;
 use Illuminate\Http\Request;
 use RealRashid\SweetAlert\Facades\Alert;
 
+use function PHPSTORM_META\map;
 
 class MenuController extends Controller
 {
@@ -35,6 +36,35 @@ class MenuController extends Controller
             ->paginate(12);
         $categories = MenuCategory::all();
         return view('menu.item.index', compact(['menus', 'categories']));
+    }
+
+    public function getMenuIngredients()
+    {
+        $menus = Menu::with('ingredients')->get();
+        $menuIngredients = [];
+        foreach ($menus as $menu) {
+            $menuIngredients[$menu->id] = $menu->ingredients->map(function ($ingredient) {
+                return [
+                    'id' => $ingredient->id,
+                    'name' => $ingredient->name,
+                    'stock' => $ingredient->stock,
+                    'pivot_quantity' => $ingredient->pivot->quantity
+
+                ];
+            });
+        }
+        $ingredientStocks = [];
+        $ingredients = Ingredient::select('id', 'name', 'stock')->get();
+        foreach ($ingredients as $ingredient) {
+            $ingredientStocks[$ingredient->id] = [
+                'name' => $ingredient->name,
+                'stock' => $ingredient->stock
+            ];
+        }
+        return response()->json([
+            'menuIngredients' => $menuIngredients,
+            'ingredientStocks' => $ingredientStocks
+        ]);
     }
 
     /**

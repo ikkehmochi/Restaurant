@@ -37,6 +37,7 @@ class OrderController extends Controller
     /**
      * Store a newly created resource in storage.
      */
+
     public function store(StoreorderRequest $request)
     {
         $validatedData = $request->validated();
@@ -45,17 +46,40 @@ class OrderController extends Controller
         $validatedData['order_status_id'] = 1;
         $validatedData['payment_method'] = 'cash';
         $validatedData['payment_status'] = 'pending';
-        $order = Order::create($validatedData);
         if ($request->has('menus')) {
-            $pivotData = [];
             foreach ($request->input('menus') as $menuId => $data) {
                 if (!empty($data['quantity'])) {
+                    $menu = Menu::with('ingredients')->whereId($menuId)->first();
+                    foreach ($menu->ingredients as $ingredient) {
+                        $needed_quantity = $ingredient->pivot->quantity * $data['quantity'];
+                        if ($ingredient->stock < $needed_quantity) {
+                            Alert::warning(
+                                "{$ingredient->name} Tidak Cukup!",
+                                "{$ingredient->name} untuk {$menu->name} berjumlah {$data['quantity']} tidak memiliki stok yang cukup.\nStok {$ingredient->name} saat ini: {$ingredient->stock}"
+                            );
+                            return back()->withInput();
+                        }
+                    }
+                }
+            }
+            $pivotData = [];
+            foreach ($request->input('menus') as $menuId => $data) {
+
+                if (!empty($data['quantity'])) {
+                    $menu = Menu::with('ingredients')->whereId($menuId)->first();
+                    foreach ($menu->ingredients as $ingredient) {
+                        $needed_quantity = $ingredient->pivot->quantity * $data['quantity'];
+                        $ingredient->stock -= $needed_quantity;
+                        $ingredient->updated_at = now();
+                        $ingredient->save();
+                    }
                     $pivotData[$menuId] = [
                         'quantity' => $data['quantity'],
-
                     ];
                 }
             }
+            $order = Order::create($validatedData);
+
             if (!empty($pivotData)) {
                 $order->menus()->attach($pivotData);
             }
@@ -94,18 +118,50 @@ class OrderController extends Controller
     {
         $validatedData = $request->validated();
         $validatedData['updated_at'] = now();
-        $order->update($validatedData);
-        $pivotData = [];
         // dd($request->all());
+        $prev_data = $order->menus()->with(['ingredients'])->get();
+        foreach ($prev_data as $menu) {
+            foreach ($menu->ingredients as $ingredient) {
+                $used_quantity = $ingredient->pivot->quantity * $menu->pivot->quantity;
+                $ingredient->stock += $used_quantity;
+                $ingredient->updated_at = now();
+                $ingredient->save();
+            }
+        }
         if ($request->has('menus')) {
+            foreach ($request->input('menus') as $menuId => $data) {
+                if (!empty($data['quantity'])) {
+                    $menu = Menu::with('ingredients')->whereId($menuId)->first();
+                    foreach ($menu->ingredients as $ingredient) {
+                        $needed_quantity = $ingredient->pivot->quantity * $data['quantity'];
+                        if ($ingredient->stock < $needed_quantity) {
+                            Alert::warning(
+                                "{$ingredient->name} Tidak Cukup!",
+                                "{$ingredient->name} untuk {$menu->name} berjumlah {$data['quantity']} tidak memiliki stok yang cukup.\nStok {$ingredient->name} saat ini: {$ingredient->stock}"
+                            );
+                            return back()->withInput();
+                        }
+                    }
+                }
+            }
+
+            $pivotData = [];
             foreach ($request->input('menus') as $menuId => $menuData) {
-                if (isset($menuData['quantity'])) {
+                if (!empty($menuData['quantity'])) {
+                    $menu = Menu::with('ingredients')->whereId($menuId)->first();
+                    foreach ($menu->ingredients as $ingredient) {
+                        $needed_quantity = $ingredient->pivot->quantity * $menuData['quantity'];
+                        $ingredient->stock -= $needed_quantity;
+                        $ingredient->updated_at = now();
+                        $ingredient->save();
+                    }
                     $pivotData[$menuId] = [
                         'quantity' => $menuData['quantity'],
                     ];
                 }
             }
         }
+        $order->update($validatedData);
         $order->menus()->sync($pivotData);
         Alert::success('Success', 'Order Updated Successfully');
         return redirect()->route('orders.index')->with('success', 'Order Updated');

@@ -1,4 +1,10 @@
 @extends('app.master')
+<style>
+    .custom-tooltip {
+        --bs-tooltip-bg: var(--bd-black-bg);
+        --bs-tooltip-color: var(--bs-white);
+    }
+</style>
 @section('content')
 
 <div class="container">
@@ -39,10 +45,18 @@
         <tbody>
             @foreach ($ingredients as $ingredient)
             @include('ingredients.modal.edit', ['ingredient' => $ingredient])
+            @include('ingredients.modal.stockEdit', ['ingredient'=>$ingredient])
             <tr>
                 <th scope="row">{{$ingredient->name}}</th>
                 <td>{{ $ingredient->description }}</td>
-                <td>{{ $ingredient->stock }}</td>
+                <td><a href={{ route('ingredients.stockEdit', $ingredient) }}
+                        data-bs-toggle="modal"
+                        data-bs-target="#stockEditModal{{ $ingredient->id }}"
+                        data-bs-toggle="tooltip"
+                        data-bs-custom-class="custom-tooltip"
+                        title="Edit Stock {{ $ingredient->name }}"
+                        class="btn">
+                        {{ $ingredient->stock }} </a></td>
                 <td>
                     <div class="d-flex gap-2">
                         <a href={{ route('ingredients.edit', $ingredient) }}

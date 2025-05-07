@@ -16,7 +16,7 @@ class OrderSeeder extends Seeder
     {
         $faker = Faker::create();
 
-        for ($i = 0; $i < 10; $i++) {
+        for ($i = 0; $i < 20; $i++) {
             DB::table('orders')->insert([
                 'customer_name' => $faker->name,
                 'table_id' => $faker->numberBetween(1, 20),

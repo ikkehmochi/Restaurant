@@ -28,6 +28,7 @@ Route::group(['prefix' => 'tables'], function () {
 Route::group(['prefix' => 'menus'], function () {
     Route::get('/', [MenuController::class, 'index'])->name('menus.index');
     Route::get('/category/{category_id}', [MenuController::class, 'indexByCat'])->name('menus.indexByCat');
+    Route::get('/menu/ingredients', [MenuController::class, 'getMenuIngredients'])->name('ingredients.api');
     Route::get('/create', [MenuController::class, 'create'])->name('menus.create');
     Route::post('/', [MenuController::class, 'store'])->name('menus.store');
     Route::get('/{menu}', [MenuController::class, 'show'])->name('menus.show');
@@ -60,6 +61,7 @@ Route::group(['prefix' => 'ingredients'], function () {
     Route::post('/', [IngredientController::class, 'store'])->name('ingredients.store');
     Route::get('/{ingredient}', [IngredientController::class, 'show'])->name('ingredients.show');
     Route::get('/{ingredient}/edit', [IngredientController::class, 'edit'])->name('ingredients.edit');
+    Route::get('/{ingredient}/stock/edit', [IngredientController::class, 'stokEdit'])->name('ingredients.stockEdit');
     Route::patch('/{ingredient}', [IngredientController::class, 'update'])->name('ingredients.update');
     Route::delete('/{ingredient}', [IngredientController::class, 'destroy'])->name('ingredients.destroy');
 });

@@ -18,7 +18,7 @@ class IngredientMenuSeeder extends Seeder
             $pivotData = [];
             foreach ($ingredientSet as $ingredientId) {
                 $pivotData[$ingredientId] = [
-                    'quantity' => rand(50, 500), // quantity in grams/ml/etc.
+                    'quantity' => rand(1, 10), // quantity in grams/ml/etc.
                 ];
             }
 

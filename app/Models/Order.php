@@ -17,6 +17,7 @@ class Order extends Model
         return [
             self::STATUS_PENDING => 'Pending',
             self::STATUS_PREPARING => 'Preparing',
+            self::STATUS_SERVED => 'Served',
             self::STATUS_COMPLETED => 'Completed',
             self::STATUS_CANCELLED => 'Cancelled'
         ][$status] ?? $status;
@@ -26,6 +27,7 @@ class Order extends Model
         return [
             self::STATUS_PENDING => 'Pending',
             self::STATUS_PREPARING => 'Preparing',
+            self::STATUS_SERVED => 'Served',
             self::STATUS_COMPLETED => 'Completed',
             self::STATUS_CANCELLED => 'Cancelled'
         ];

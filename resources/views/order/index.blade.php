@@ -6,44 +6,49 @@
         height: 2rem;
     }
 
-    .pending {
-        background-color: rgb(185, 167, 229);
+    .order-pending {
+        background-color: #6b757c;
         color: #ffffff;
     }
 
-    .preparing {
-        background-color: rgb(254, 235, 155);
-        color: #ffffff;
+    .order-preparing {
+        background-color: #fec200;
+        color: black;
     }
 
-    .served {
+    .order-served {
         background-color: #6BA8F2;
         color: #ffffff;
     }
 
-    .paid {
-        background-color: #23A26D;
+    .order-completed {
+        background-color: #198652;
         color: #ffffff;
     }
 
-    .payment-completed {
-        background-color: rgb(0, 216, 32);
+    .order-cancelled {
+        background-color: #db3642;
         color: #ffffff;
     }
 
-    .payment-pending {
-        background-color: grey;
+    .payment-paid {
+        background-color: #198652;
+        color: #ffffff;
+    }
+
+    .payment-unpaid {
+        background-color: #6b757c;
         color: #ffffff;
     }
 
     .payment-failed {
-        background-color: rgb(255, 8, 0);
+        background-color: #db3642;
         color: #ffffff;
     }
 
-    .cancelled {
-        background-color: rgb(255, 8, 0);
-        color: #ffffff;
+    .payment-refunded {
+        background-color: #fec200;
+        color: black;
     }
 </style>
 
@@ -73,9 +78,9 @@
                     {{ $order->customer_name }}
                 </td>
                 <td>{{ $order->table->number }}</td>
-                <td class="text-center"><span class="badge rounded-pill {{ $order->status_label }}" style="width: 70px; font-size: 12px;">{{ $order->status }}</span></td>
+                <td class="text-center"><span class="badge rounded-pill order-{{Str::lower( $order->status_label) }}" style="width: 100px; font-size: 12px;">{{Str::upper( $order->status) }}</span></td>
                 <td>{{ $order->total_price }}</td>
-                <td>Pembayaran : {{$order->payment_method }} <br> <span class="badge rounded-pill payment-{{ Str::lower($order->payment_status) }}" style="width: 100px">{{ Str::upper($order->payment_status)}}</span></td>
+                <td>Pembayaran : {{$order->payment_method=='qris'?Str::upper($order->payment_method):Str::ucfirst($order->payment_method) }} <br> <span class="badge rounded-pill payment-{{ Str::lower($order->payment_status) }}" style="width: 100px">{{ Str::upper($order->payment_status)}}</span></td>
                 <td>
                     <a href={{ route('orders.show', $order) }} type="button" class="btn btn-primary"><i class="fa-solid fa-eye"></i></a>
                     <a href={{ route('orders.edit', $order) }} type="button" class="btn btn-warning"><i class="fa-solid fa-pen-to-square"></i></a>
