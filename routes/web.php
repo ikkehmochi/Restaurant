@@ -51,6 +51,7 @@ Route::group(['prefix' => 'orders'], function () {
     Route::post('/', [OrderController::class, 'store'])->name('orders.store');
     Route::get('/{order}', [OrderController::class, 'show'])->name('orders.show');
     Route::get('/{order}/edit', [OrderController::class, 'edit'])->name('orders.edit');
+    Route::get('/{order}/invoice/pdf', [OrderController::class, 'printPDF'])->name('orders.printPDF');
     Route::patch('/{order}', [OrderController::class, 'update'])->name('orders.update');
     Route::delete('/{order}', [OrderController::class, 'destroy'])->name('orders.destroy');
 });

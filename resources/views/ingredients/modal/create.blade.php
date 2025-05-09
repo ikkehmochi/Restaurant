@@ -13,34 +13,27 @@
                     <div class="container">
                         <div class="row">
                             <div class="col-md-8 offset-md-2">
-                                <div class="card">
+                                <div class="mb-3">
+                                    <label for="name" class="form-label">Ingredient Name</label>
+                                    <input type="text" class="form-control @error('name') is-invalid @enderror"
+                                        id="name" name="name">
+                                    @error('number')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
 
-                                    <div class="card-body">
-
-
-                                        <div class="mb-3">
-                                            <label for="name" class="form-label">Ingredient Name</label>
-                                            <input type="text" class="form-control @error('name') is-invalid @enderror"
-                                                id="name" name="name">
-                                            @error('number')
-                                            <div class="invalid-feedback">{{ $message }}</div>
-                                            @enderror
-                                        </div>
-
-                                        <div class="mb-3">
-                                            <label for="description" class="form-label">Description</label>
-                                            <textarea name="description" class="form-control @error('description') is-invalid @enderror">{{ old('description') }}</textarea>
-                                            @error('description')<div class="invalid-feedback">{{ $message }}</div>@enderror
-                                        </div>
-                                        <div class="mb-3">
-                                            <label for="stock" class="form-label">Ingredient Stock</label>
-                                            <input type="number" class="form-control @error('stock') is-invalid @enderror"
-                                                id="stock" name="stock" value="{{ old('stock') }}">
-                                            @error('stock')
-                                            <div class="invalid-feedback">{{ $message }}</div>
-                                            @enderror
-                                        </div>
-                                    </div>
+                                <div class="mb-3">
+                                    <label for="description" class="form-label">Description</label>
+                                    <textarea name="description" class="form-control @error('description') is-invalid @enderror">{{ old('description') }}</textarea>
+                                    @error('description')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                                </div>
+                                <div class="mb-3">
+                                    <label for="stock" class="form-label">Ingredient Stock</label>
+                                    <input type="number" class="form-control @error('stock') is-invalid @enderror"
+                                        id="stock" name="stock" value="{{ old('stock') }}">
+                                    @error('stock')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
                                 </div>
                             </div>
                         </div>
@@ -48,7 +41,7 @@
                 </div>
                 <div class="modal-footer">
                     <a href="{{ route('ingredients.index') }}" class="btn btn-secondary">Cancel</a>
-                    <button type="submit" class="btn btn-primary">Create Ingredient</button>
+                    <button type="submit" class="btn btn-primary">Create</button>
                 </div>
             </form>
 

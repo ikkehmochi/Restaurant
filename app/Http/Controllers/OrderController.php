@@ -20,7 +20,7 @@ class OrderController extends Controller
     public function index()
     {
         // Fetch all orders from the database
-        $orders = Order::with(relations: ['table'])->paginate(10);
+        $orders = Order::with(relations: ['tables'])->paginate(10);
         return view('order.index', compact('orders'));
     }
 
@@ -75,6 +75,8 @@ class OrderController extends Controller
                     }
                     $pivotData[$menuId] = [
                         'quantity' => $data['quantity'],
+                        'subtotal' => $data['quantity'] * $menu->price
+
                     ];
                 }
             }
@@ -93,8 +95,18 @@ class OrderController extends Controller
      */
     public function show(Order $order)
     {
-        //
-        return view('order.show', compact('order'));
+        $table = Table::whereId($order->table_id)->first();
+        $menus = $order->menus()->get();
+
+        return view('order.show', compact(['order', 'menus', 'table']));
+    }
+    public function printPDF(Order $order)
+    {
+
+        $table = Table::whereId($order->table_id)->first();
+        $menus = $order->menus()->get();
+
+        return view('pdf.index', compact(['order', 'menus', 'table']));
     }
 
     /**
@@ -157,6 +169,7 @@ class OrderController extends Controller
                     }
                     $pivotData[$menuId] = [
                         'quantity' => $menuData['quantity'],
+                        'subtotal' => $menuData['quantity'] * $menu->price
                     ];
                 }
             }

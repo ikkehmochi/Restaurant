@@ -187,4 +187,9 @@ class MenuController extends Controller
         Alert::success('Menu deleted successfully.');
         return redirect()->route('menus.index')->with('success', 'Menu deleted successfully.');
     }
+    public function cleansePhoto()
+    {
+        $allMenu = Menu::all()->pluck('image');
+        dd($allMenu);
+    }
 }

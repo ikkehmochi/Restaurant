@@ -27,7 +27,7 @@
                 </div>
                 <div class="modal-footer">
                     <a href="{{ route('ingredients.index') }}" class="btn btn-secondary">Cancel</a>
-                    <button type="submit" class="btn btn-primary">Create Ingredient</button>
+                    <button type="submit" class="btn btn-primary">Update</button>
                 </div>
             </form>
 

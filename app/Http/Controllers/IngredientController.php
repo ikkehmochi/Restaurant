@@ -72,7 +72,9 @@ class IngredientController extends Controller
     public function update(UpdateIngredientRequest $request, Ingredient $ingredient)
     {
         $validated = $request->validated();
-        $validated['slug'] = str($validated['name'])->slug();
+        if (isset($validated['name'])) {
+            $validated['slug'] = str($validated['name'])->slug();
+        }
         $validated['updated_at'] = now();
         $ingredient->update($validated);
         return redirect()->route('ingredients.index')->with('success', 'Ingredient updated successfully.');

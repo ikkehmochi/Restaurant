@@ -17,6 +17,7 @@ return new class extends Migration
             $table->unsignedBigInteger('table_id')->nullable();
             $table->string('status')->default('pending');
             $table->double('total_price')->default(0);
+            $table->double('paid')->default(0);
             $table->string('notes')->nullable(true);
             $table->string('payment_method')->nullable(false)->default('cash');
             $table->string('payment_status')->nullable(false)->default('pending');

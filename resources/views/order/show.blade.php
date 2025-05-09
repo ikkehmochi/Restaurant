@@ -1,7 +1,7 @@
 @extends('app.master')
 <style>
     .order-info {
-        font-size: 10px;
+        font-size: 16px;
     }
 
     .order-info td {
@@ -12,35 +12,30 @@
 <table class="table table-borderless m-0 order-info">
     <thead>
         <tr>
-            <th style="width: 15%"></th>
-            <th style="width: 35%"></th>
-            <th style="width: 15%"></th>
-            <th style="width: 35%"></th>
+            <th style="width: 20%"></th>
+            <th style="width: 30%"></th>
+            <th style="width: 20%"></th>
+            <th style="width: 30%"></th>
         </tr>
     </thead>
+
     <tr>
         <td>Order Id</td>
-        <td>: 01</td>
+        <td>: {{ $order->id }}</td>
         <td>Tanggal</td>
-        <td>: 21-09-2003</td>
+        <td>: {{ ($order->updated_at)->toDateString() }}</td>
     </tr>
     <tr>
         <td>Nama</td>
-        <td>: Anon</td>
+        <td>: {{ $order->customer_name }}</td>
         <td>Metode Pembayaran</td>
-        <td>: Cash</td>
+        <td>: {{ucfirst( $order->payment_method )}}</td>
     </tr>
     <tr>
         <td>Meja</td>
-        <td>: TR02</td>
+        <td>: {{$table->number }}</td>
         <td>Status Pembayaran</td>
-        <td>: Berhasil</td>
-    </tr>
-    <tr>
-        <td>Order Status</td>
-        <td>: YESSIR</td>
-        <td></td>
-        <td></td>
+        <td>: {{ucfirst( $order->payment_status) }}</td>
     </tr>
 </table>
 
@@ -54,11 +49,16 @@
         </tr>
     </thead>
     <tbody>
+        @foreach ($menus as $menu)
         <tr>
-            <td>waw</td>
+            <td>{{$loop->iteration}}</td>
+            <td>{{ $menu->name }}</td>
+            <td>{{ $menu->pivot->quantity }}</td>
+            <td>{{ $menu->pivot->subtotal }}</td>
         </tr>
 
-
+        @endforeach
     </tbody>
 </table>
+
 @endsection

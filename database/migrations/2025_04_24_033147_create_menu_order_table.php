@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignId('order_id')->constrained('orders', 'id')->cascadeOnDelete();
             $table->foreignId('menu_id')->constrained('menus', 'id')->cascadeOnDelete();
             $table->unsignedBigInteger('quantity');
+            $table->double('subtotal')->default(0);
         });
     }
 

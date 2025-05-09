@@ -112,7 +112,7 @@ class Order extends Model
         'updated_at' => 'datetime'
     ];
 
-    public function table()
+    public function tables()
     {
         return $this->belongsTo(Table::class, 'table_id');
     }
@@ -120,6 +120,6 @@ class Order extends Model
 
     public function menus()
     {
-        return $this->belongsToMany(Menu::class)->withPivot('quantity');
+        return $this->belongsToMany(Menu::class)->withPivot('quantity', 'subtotal');
     }
 }
