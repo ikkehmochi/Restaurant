@@ -9,7 +9,7 @@ use App\Models\Ingredient;
 use App\Models\Table;
 use App\Models\Menu;
 use RealRashid\SweetAlert\Facades\Alert;
-
+use Illuminate\Http\Request;
 use function PHPUnit\Framework\returnSelf;
 
 class OrderController extends Controller
@@ -17,11 +17,34 @@ class OrderController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
+        $tables=Table::all();
         // Fetch all orders from the database
-        $orders = Order::with(relations: ['tables'])->paginate(10);
-        return view('order.index', compact('orders'));
+        $orders = Order::with(relations: ['tables'])
+        ->when($request->query('customer_name'), function($query) use ($request){
+            return $query->where('customer_name', "LIKE", "%".$request->query('customer_name')."%");
+        })
+        ->when($request->query('table_id'), function($query) use ($request){
+            return $query->where('table_id', "LIKE", "%".$request->query('table_id')."%");
+        })
+        ->when($request->query('status'), function($query) use ($request){
+            return $query->where('status', "LIKE", "%".$request->query('status')."%");
+        })
+        ->when($request->query('payment_method'), function($query) use ($request){
+            return $query->where('payment_method', "LIKE", "%".$request->query('payment_method')."%");
+        })
+        ->when($request->query('payment_status'), function($query) use ($request){
+            return $query->where('payment_status', "LIKE", "%".$request->query('payment_status')."%");
+        })
+        ->when($request->query('start_date'), function($query) use ($request){
+            return $query->whereDate('created_at', '>=', $request->query('start_date'));
+        })
+        ->when($request->query('end_date'), function($query) use ($request){
+            return $query->whereDate('updated_at', '<=', $request->query('end_date'));
+        })->paginate(10);
+        
+        return view('order.index', compact(['orders', 'tables']));
     }
 
     /**
@@ -38,7 +61,7 @@ class OrderController extends Controller
      * Store a newly created resource in storage.
      */
 
-    public function store(StoreorderRequest $request)
+    public function store(StoreOrderRequest $request)
     {
         $validatedData = $request->validated();
         $validatedData['created_at'] = now();

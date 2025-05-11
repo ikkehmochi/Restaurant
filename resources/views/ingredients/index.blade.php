@@ -7,7 +7,6 @@
 </style>
 @section('content')
 
-<div class="container">
     <form id="filter" method="GET" class="mb-3">
         <div class="row g-3">
             <div class="col-md-3">
@@ -35,7 +34,7 @@
     </div>
     <table class="table">
         <thead>
-            <tr>
+            <tr class="text-center">
                 <th scope="col">Name</th>
                 <th scope="col">Description</th>
                 <th scope="col">Stock</th>
@@ -46,7 +45,7 @@
             @foreach ($ingredients as $ingredient)
             @include('ingredients.modal.edit', ['ingredient' => $ingredient])
             @include('ingredients.modal.stockEdit', ['ingredient'=>$ingredient])
-            <tr>
+            <tr class='text-center'>
                 <th scope="row">{{$ingredient->name}}</th>
                 <td>{{ $ingredient->description }}</td>
                 <td><a href={{ route('ingredients.stockEdit', $ingredient) }}
@@ -57,8 +56,8 @@
                         title="Edit Stock {{ $ingredient->name }}"
                         class="btn">
                         {{ $ingredient->stock }} </a></td>
-                <td>
-                    <div class="d-flex gap-2">
+                <td >
+                    <div class="d-flex gap-2 justify-content-center">
                         <a href={{ route('ingredients.edit', $ingredient) }}
                             data-bs-toggle="modal"
                             data-bs-target="#editModal{{ $ingredient->id }}"
@@ -78,7 +77,6 @@
             @endforeach
         </tbody>
     </table>
-</div>
 <div class="d-flex justify-content-end">
     {{ $ingredients->links('pagination::bootstrap-5') }}
 </div>
