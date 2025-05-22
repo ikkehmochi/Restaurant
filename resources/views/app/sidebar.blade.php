@@ -6,38 +6,10 @@
             data-lte-toggle="treeview"
             role="menu"
             data-accordion="false">
-            <li class="nav-item">
-                <a href="#" class="nav-link">
-                    <i class="nav-icon bi bi-speedometer"></i>
-                    <p>
-                        Dashboard
-                        <i class="nav-arrow bi bi-chevron-right"></i>
-                    </p>
-                </a>
-                <ul class="nav nav-treeview">
-                    <li class="nav-item">
-                        <a href="../index.html" class="nav-link">
-                            <i class="nav-icon bi bi-circle"></i>
-                            <p>Dashboard v1</p>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="../index2.html" class="nav-link">
-                            <i class="nav-icon bi bi-circle"></i>
-                            <p>Dashboard v2</p>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="../index3.html" class="nav-link">
-                            <i class="nav-icon bi bi-circle"></i>
-                            <p>Dashboard v3</p>
-                        </a>
-                    </li>
-                </ul>
-            </li>
+
             <li class="nav-item">
                 <a href={{ route('tables.index') }} class="nav-link">
-                    <img src="{{ asset("icons/seats.png") }}" alt="" style="width: 24px; height: 24px;">
+                    <img src="{{ asset("icons/table-only-dark.png") }}" alt="" style="width: 24px; height: 24px;">
                     <p>Tables</p>
                 </a>
             </li>
@@ -66,7 +38,7 @@
             </li>
             <li class="nav-item">
                 <a href={{ route('orders.index') }} class="nav-link">
-                    <i class=" nav-icon fa-solid fa-note-sticky"></i>
+                    <img src="{{ asset('icons/food-in-light.svg') }}" class="card-img-top" alt="..." style="width: 28px; height: 28px;">
                     <p>Orders</p>
                 </a>
             </li>

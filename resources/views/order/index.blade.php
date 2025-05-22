@@ -76,7 +76,7 @@
             <div class="input-group">
                 <span class="input-group-text"><i class="fas fa-filter"></i></span>
                 <select name="status" class="form-select" id="status">
- 
+
                     <option value="">All Status</option>
                     <option value="Pending" {{ request('status')=='Pending'?'selected':'' }}>Pending</option>
                     <option value="Preparing" {{ request('status')=='Preparing'?'selected':'' }}>Preparing</option>
@@ -118,19 +118,28 @@
                 <input name="end_date" type="date" class="form-control" id="end_date" placeholder="End Date" value="{{ request('end_date') }}">
             </div>
         </div>
+        <!-- <div class="col-md-2">
+            <div class="input-group">
+                <span class="input-group-text"><i class="fas fa-filter"></i></span>
+                <select name="sort_date" class="form-select" id="sort_date" onchange="$document.getElementById('submit').submit()">
+                    <option value="">Sort By Date</option>
+                    <option value="desc" {{ request('sort_date')=='desc'?'selected':'' }}>Newest</option>
+                    <option value="asc" {{ request('sort_date')=='asc'?'selected':'' }}>Oldest</option>
+                </select>
+            </div>
+        </div> -->
         <div class="col-md-1">
-            <button type="submit" title="Filter Search" data-bs-toggle="tooltip" class="btn btn-primary w-100 h-100">
+            <button type="submit" title="Filter Search" id="submit" data-bs-toggle="tooltip" class="btn btn-primary w-100 h-100">
                 <i class="fas fa-filter"></i>
             </button>
         </div>
         <div class="col-md-1">
-            <a href="{{ route('orders.index')}}" title="Reset Filter" data-bs-toggle="tooltip" id="reset-filter" name="reset-filter" type="button" class="btn btn-secondary w-100 h-100"> <i class="fas fa-undo"></i>
+            <a href="{{ route('orders.index')}}" title="Reset Filter" data-bs-toggle="tooltip" id="reset-filter" name="reset-filter" type="button" class="btn btn-secondary w-100 h-100" style="display: flex; justify-content:center; align-items:center;"> <i class="fas fa-undo"></i>
             </a>
-
         </div>
     </div>
 </form>
-<div class="col-md-12 mb-2">
+<div class=" col-md-12 mb-2">
     <a href={{ route('orders.create') }} class="btn btn-primary w-100" type="button" data-bs-toggle="tooltip" title="Create New Order">Tambahkan Pesanan Baru</a>
 </div>
 <!-- /.card-header -->
@@ -144,7 +153,18 @@
                 <th>Status</th>
                 <th>Total Price</th>
                 <th>Payment</th>
-                <th>Date</th>
+                <th>
+                    <a href="{{ request()->fullUrlWithQuery(['sort_date' => (request('sort_date') == 'asc' ? 'desc' : 'asc')]) }}" class="text-decoration-none text-dark">
+                        Date
+                        @if(request('sort_date') == 'asc')
+                        <i class="fas fa-sort-up ms-1"></i>
+                        @elseif(request('sort_date') == 'desc')
+                        <i class="fas fa-sort-down ms-1"></i>
+                        @else
+                        <i class="fas fa-sort ms-1"></i>
+                        @endif
+                    </a>
+                </th>
                 <th>Action</th>
             </tr>
         </thead>

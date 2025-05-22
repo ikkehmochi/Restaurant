@@ -70,7 +70,7 @@
 
         function getMenuIngredients() {
             $.ajax({
-                url: "{{ route('ingredients.api') }}",
+                url: "{{ route('menus.ingredients.api') }}",
                 type: "GET",
                 dataType: "json",
                 success: function(response) {

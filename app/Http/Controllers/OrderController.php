@@ -8,6 +8,7 @@ use App\Http\Requests\UpdateOrderRequest;
 use App\Models\Ingredient;
 use App\Models\Table;
 use App\Models\Menu;
+use App\Models\TableStatus;
 use RealRashid\SweetAlert\Facades\Alert;
 use Illuminate\Http\Request;
 use function PHPUnit\Framework\returnSelf;
@@ -19,32 +20,56 @@ class OrderController extends Controller
      */
     public function index(Request $request)
     {
-        $tables=Table::all();
+        $tables = Table::all();
         // Fetch all orders from the database
         $orders = Order::with(relations: ['tables'])
-        ->when($request->query('customer_name'), function($query) use ($request){
-            return $query->where('customer_name', "LIKE", "%".$request->query('customer_name')."%");
-        })
-        ->when($request->query('table_id'), function($query) use ($request){
-            return $query->where('table_id', "LIKE", "%".$request->query('table_id')."%");
-        })
-        ->when($request->query('status'), function($query) use ($request){
-            return $query->where('status', "LIKE", "%".$request->query('status')."%");
-        })
-        ->when($request->query('payment_method'), function($query) use ($request){
-            return $query->where('payment_method', "LIKE", "%".$request->query('payment_method')."%");
-        })
-        ->when($request->query('payment_status'), function($query) use ($request){
-            return $query->where('payment_status', "LIKE", "%".$request->query('payment_status')."%");
-        })
-        ->when($request->query('start_date'), function($query) use ($request){
-            return $query->whereDate('created_at', '>=', $request->query('start_date'));
-        })
-        ->when($request->query('end_date'), function($query) use ($request){
-            return $query->whereDate('updated_at', '<=', $request->query('end_date'));
-        })->paginate(10);
-        
+            ->when($request->query('customer_name'), function ($query) use ($request) {
+                return $query->where('customer_name', "LIKE", "%" . $request->query('customer_name') . "%");
+            })
+            ->when($request->query('table_id'), function ($query) use ($request) {
+                return $query->where('table_id', "LIKE", "%" . $request->query('table_id') . "%");
+            })
+            ->when($request->query('status'), function ($query) use ($request) {
+                return $query->where('status', "LIKE", "%" . $request->query('status') . "%");
+            })
+            ->when($request->query('payment_method'), function ($query) use ($request) {
+                return $query->where('payment_method', "LIKE", "%" . $request->query('payment_method') . "%");
+            })
+            ->when($request->query('payment_status'), function ($query) use ($request) {
+                return $query->where('payment_status', "LIKE", "%" . $request->query('payment_status') . "%");
+            })
+            ->when($request->query('start_date'), function ($query) use ($request) {
+                return $query->whereDate('created_at', '>=', $request->query('start_date'));
+            })
+            ->when($request->query('end_date'), function ($query) use ($request) {
+                return $query->whereDate('updated_at', '<=', $request->query('end_date'));
+            })
+            ->when($request->query('sort_date'), function ($query) use ($request) {
+                $sortDirection = $request->query('sort_date') === 'asc' ? 'asc' : 'desc';
+                return $query->orderBy('created_at', $sortDirection);
+            })->paginate(10);
+
         return view('order.index', compact(['orders', 'tables']));
+    }
+
+    public function getOrderDetailsAPI(Request $request)
+    {
+        $checkTable = Table::where('id', $request->table_id)->where('status_id', 2)->first();
+        if ($checkTable === null) {
+            return response()->json([
+                'order' => null,
+            ]);
+        }
+        $order = Order::where('table_id', $request->table_id)->whereIn('status', ["preparing", "pending"])->first();
+        if ($order === null) {
+            return response()->json([
+                'order' => null,
+            ]);
+        }
+        $order->load('menus');
+        return response()->json([
+            'order' => $order,
+        ]);
     }
 
     /**

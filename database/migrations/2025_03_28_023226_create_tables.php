@@ -17,6 +17,8 @@ return new class extends Migration
             $table->unsignedBigInteger('capacity')->default(2);
             $table->unsignedBigInteger('status_id')->default(1);
             $table->foreign('status_id')->references('id')->on('table_statuses');
+            $table->string('floor');
+
             $table->timestamps();
         });
     }

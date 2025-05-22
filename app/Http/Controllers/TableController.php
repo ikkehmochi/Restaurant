@@ -7,6 +7,8 @@ use App\Models\TableStatus;
 use Illuminate\Http\Request;
 use RealRashid\SweetAlert\Facades\Alert;
 
+use function Pest\Laravel\json;
+
 class TableController extends Controller
 {
     /**
@@ -32,6 +34,19 @@ class TableController extends Controller
         $statuses = (new Table())->getStatusName();
         return view('table.index', data: compact('tables', 'statuses'));
     }
+
+    public function homePageTableIndex()
+    {
+        return view('homepage.DiningTables.index');
+    }
+    public function getAllTables()
+    {
+        $tables = Table::with(['tableStatus', 'tableOrders'])->get();
+        return response()->json([
+            'tables' => $tables,
+        ]);
+    }
+
 
 
     /**

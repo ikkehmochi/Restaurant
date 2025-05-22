@@ -8,24 +8,11 @@
 
     <!--begin::Primary Meta Tags-->
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="title" content="Enshoku Admin Center" />
+    <meta name="title" content="Enshoku Restaurant" />
     <meta name="author" content="Akimforce" />
     <meta name="description" content="Enshoku Admin Center is a modern dashboard for managing restaurant orders, tables, payments, and analytics with a responsive and user-friendly interface." />
-    <meta name="keywords" content="Enshoku, restaurant admin, restaurant dashboard, food order management, table reservation, POS system, admin panel, order tracking, Laravel admin, Bootstrap 5" />
+    <meta name="keywords" content="Enshoku, restaurant" />
     <!--end::Primary Meta Tags-->
-
-    <!--begin::Social Meta Tags (Optional for Sharing Previews)-->
-    <meta property="og:type" content="website" />
-    <meta property="og:title" content="Enshoku Admin Center" />
-    <meta property="og:description" content="Manage your restaurant operations efficiently with Enshoku Admin Center — orders, tables, payments, and more." />
-    <meta property="og:image" content="https://yourdomain.com/assets/images/enshoku-preview.png" />
-    <!-- <meta property="og:url" content="https://yourdomain.com/admin" /> -->
-
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Enshoku Admin Center" />
-    <meta name="twitter:description" content="Efficient restaurant management through a modern and clean admin dashboard." />
-    <meta name="twitter:image" content="https://yourdomain.com/assets/images/enshoku-preview.png" />
-    <!--end::Social Meta Tags-->
 
     <!--begin::Fonts (if you're loading any)-->
     <!-- Example: -->
@@ -55,12 +42,14 @@
     <!--end::Third Party Plugin(Bootstrap Icons)-->
     <!--begin::Required Plugin(AdminLTE)-->
     <link rel="stylesheet" href="{{asset("tpl/css/adminlte.css")}}" />
-    <link rel='icon' href=" {{ asset('icons/favicon.ico') }}">
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <link rel='icon' href=" {{ asset('icons/favicon.ico') }}">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Maven+Pro:wght@400..900&family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
 
-    <!--end::Required Plugin(AdminLTE)-->
     @stack('styles')
 
+    <!--end::Required Plugin(AdminLTE)-->
 </head>
 <!--end::Head-->
 <!--begin::Body-->
@@ -70,40 +59,20 @@
 
     <!--begin::App Wrapper-->
     <div class="app-wrapper">
-        <!--begin::Header-->
-        @include("app.nav")
-        <!--end::Header-->
-        <!--begin::Sidebar-->
-        <aside class="app-sidebar bg-body-secondary shadow" data-bs-theme="dark">
-            <!--begin::Sidebar Brand-->
-            <div class="sidebar-brand">
-                <!--begin::Brand Link-->
-                <a href="{{ route('dashboard') }}" class="brand-link">
-                    <!--begin::Brand Image-->
-                    <img
-                        src={{ asset('icons/enshoku_logo_white.png') }}
-                        alt="Restaurant Logo"
-                        class="brand-image opacity-75 shadow" />
-                    <!--end::Brand Image-->
-                    <!--begin::Brand Text-->
-                    <!-- <span class="brand-text fw-light">Restaurant</span> -->
-                    <!--end::Brand Text-->
-                </a>
-                <!--end::Brand Link-->
-            </div>
-            <!--end::Sidebar Brand-->
-            <!--begin::Sidebar Wrapper-->
-            @include("app.sidebar")
-            <!--end::Sidebar Wrapper-->
-        </aside>
-        <!--end::Sidebar-->
+
         <!--begin::App Main-->
         <main class="app-main">
             <!--begin::App Content Header-->
             <div class="app-content-header">
                 <!--begin::Container-->
                 <div class="container-fluid">
-
+                    <header className="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 sticky top-0 z-30 w-full">
+                        <div className="container flex h-16 items-center">
+                            <img src="{{ asset('icons/enshoku_logo_black.png') }}" alt="" style='width: 128px;'>
+                            <div className="ml-auto flex items-center space-x-4">
+                            </div>
+                        </div>
+                    </header>
                 </div>
                 <!--end::Container-->
             </div>
@@ -121,20 +90,6 @@
             <!--end::App Content-->
         </main>
         <!--end::App Main-->
-        <!--begin::Footer-->
-        <footer class="app-footer">
-            <!--begin::To the end-->
-            <div class="float-end d-none d-sm-inline">Anything you want</div>
-            <!--end::To the end-->
-            <!--begin::Copyright-->
-            <strong>
-                Copyright &copy; 2014-2024&nbsp;
-                <a href="https://adminlte.io" class="text-decoration-none">AdminLTE.io</a>.
-            </strong>
-            All rights reserved.
-            <!--end::Copyright-->
-        </footer>
-        <!--end::Footer-->
     </div>
     <!--end::App Wrapper-->
     <!--begin::Script-->
@@ -158,7 +113,7 @@
     <script src="{{asset("tpl/js/adminlte.js")}}"></script>
     <!--end::Required Plugin(AdminLTE)--><!--begin::OverlayScrollbars Configure-->
     <script>
-        const SELECTOR_SIDEBAR_WRAPPER = '.sidebar-wrapper';
+        const SELECTOR_SIDEBAR_WRAPPER = ' .sidebar-wrapper';
         const Default = {
             scrollbarTheme: 'os-theme-light',
             scrollbarAutoHide: 'leave',

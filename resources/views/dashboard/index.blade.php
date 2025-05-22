@@ -1,4 +1,4 @@
-@extends('app.main')
+@extends('app.master')
 @push('styles')
 
 <style>
@@ -7,20 +7,25 @@
     }
 
     .card {
-        height: 300px;
-        width: 400px;
+        height: 200px;
         align-items: center;
+        justify-content: center;
         display: flex;
         text-decoration: none;
     }
 
     .card img {
-        height: 35%;
+        width: 128px;
         margin: 5%;
     }
 
     .card-title {
+        display: flex;
         text-align: center;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+        width: 100%;
     }
 
     .title {
@@ -55,61 +60,56 @@
         border: #324154;
         border-width: 10px;
     }
+
+    .card-img-top {
+        width: 128px;
+    }
 </style>
 @endpush
-
 @section('content')
 
-<div class="container title">
-    <p class="text-title">Welcome to Enshoku Restaurant</p>
-    <p class="text-muted textsubtitle">Please select a module.</p>
-</div>
 <div class="row text-center">
     <div class="col col-md-3">
-        <a href={{ route('homepage.tableIndex') }}>
-            <div class="card" style="width: 18rem;">
+        <a href={{ route('tables.index') }}>
+            <div class="card">
                 <img src="{{ asset('icons/dining-tables.svg') }}" class="card-img-top" alt="...">
                 <div class="card-body text-center">
-                    <h5 class="card-title w-100">Dining Tables</h5> <br>
-                    <p class="card-text">Manage dining tables, reservation, and seating</p>
+                    <h5 class="card-title">Dining Tables</h5> <br>
                 </div>
             </div>
         </a>
     </div>
     <div class="col col-md-3">
-        <a href="">
-            <div class="card" style="width: 18rem;">
+        <a href={{ route('menus.index') }}>
+            <div class="card">
+                <img src="{{ asset('icons/menu-book.svg') }}" class="card-img-top" alt="...">
+                <div class="card-body">
+                    <h5 class="card-title">Menu</h5> <br>
+                </div>
+            </div>
+        </a>
+    </div>
+    <div class="col col-md-3">
+        <a href={{ route('orders.index') }}>
+            <div class="card">
                 <img src="{{ asset('icons/food-in.svg') }}" class="card-img-top" alt="...">
                 <div class="card-body">
-                    <h5 class="card-title  w-100">Orders</h5> <br>
-                    <p class="card-text">Track, modify, and process customers orders</p>
+                    <h5 class="card-title ">Orders</h5> <br>
                 </div>
             </div>
         </a>
     </div>
+
     <div class="col col-md-3">
-        <a href="">
-            <div class="card" style="width: 18rem;">
-                <img src="{{ asset('icons/chef-hat.svg') }}" class="card-img-top" alt="...">
-                <div class="card-body">
-                    <h5 class="card-title w-100">Kitchen</h5> <br>
-                    <p class="card-text">Monitor kitchen and order progress.</p>
-                </div>
-            </div>
-        </a>
-    </div>
-    <div class="col col-md-3">
-        <a href={{ route('dashboard') }}>
-            <div class="card" style="width: 18rem;">
+        <a href={{ route('ingredients.index') }}>
+            <div class="card">
                 <img src="{{ asset('icons/admin.svg') }}" class="card-img-top" alt="...">
                 <div class="card-body">
-                    <h5 class="card-title w-100">Admin</h5> <br>
-                    <p class="card-text">Admin Dashboard.</p>
+                    <h5 class="card-title">Ingredients</h5> <br>
                 </div>
             </div>
         </a>
     </div>
 
 </div>
-
 @endsection
