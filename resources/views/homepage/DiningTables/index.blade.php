@@ -1,10 +1,6 @@
 @extends('app.main')
 @push('styles')
 <style>
-    body {
-        background-color: #324154;
-    }
-
     .card {
         color: transparent;
         border-radius: 10%;
@@ -30,19 +26,33 @@
         width: 100%;
     }
 
+    .card-blurred {
+        filter: blur(5px);
+        transition: filter 0.2s;
+    }
+
     .order-details {
         display: none;
         position: absolute;
         top: 10px;
-        right: -220px;
         width: 200px;
         background: rgba(255, 255, 255, 0.97);
         color: #222;
         border-radius: 10px;
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
         padding: 16px;
-        z-index: 10;
+        z-index: 1000;
         font-size: 14px;
+    }
+
+    .order-details.right {
+        right: -220px;
+        left: auto;
+    }
+
+    .order-details.left {
+        left: -220px;
+        right: auto;
     }
 
     .card:hover .order-details {
@@ -72,7 +82,7 @@
     <!-- Buttons will be dynamically inserted here -->
 </div>
 
-<div class="modal-test" id="modal-test">
+<!-- <div class="modal-test" id="modal-test"> -->
 </div>
 @endsection
 
@@ -117,19 +127,29 @@
             })
         }
 
-        function renderOrderDetails(response) {
-            const container = $('#modal-test');
+        function renderOrderDetails(response, targetContainer) {
+            const container = $(targetContainer);
+            console.log(`Container : ${container}`);
+
             container.empty();
+            if (!response || !response.order) {
+                container.html('<p class="text-muted p-2">No active order details.</p>');
+                return;
+            }
             var orderHeader = `
                     <div class="fw-bold mb-1" id="order-title">Order #${response.order.id}<br>${response.order.customer_name} </div>
             `
             var menus = response.order.menus
             var detailContainer = `<ul class="ps-3 mb-1">`;
-            $.each(menus, function(index, menuItem) {
-                detailElement = `<li>${menuItem.name} <span class="text-muted">x${menuItem.pivot.quantity}</span>=${menuItem.pivot.subtotal}</li>`;
-                detailContainer += detailElement;
-            })
-            detailContainer += `<ul>`
+            if (menus.length > 0) {
+                $.each(menus, function(index, menuItem) {
+                    detailElement = `<li>${menuItem.name} <span class="text-muted">x${menuItem.pivot.quantity}</span>=${menuItem.pivot.subtotal}</li>`;
+                    detailContainer += detailElement;
+                })
+            } else {
+                detailContainer += `<li>No items in this order.</li>`;
+            }
+            detailContainer += `</ul>`
             container.append(orderHeader);
             container.append(detailContainer)
             var orderFooter = `
@@ -148,7 +168,10 @@
         function renderTables(tables) {
             const container = $('#tables-container');
             container.empty();
-
+            if (!tables || tables.length === 0) {
+                container.html('<p class="text-white text-center">No tables available for this floor.</p>');
+                return;
+            }
             tables.forEach(table => {
                 let status = table.table_status.title;
                 let imgSrc = "";
@@ -162,37 +185,63 @@
 
                 let html = `
                     <div class="col-6 col-sm-4 col-md-3 col-lg-2 mb-3">
-                        <div class="card position-relative table-card" id="table-${table.id}" data-table-id="${table.id}">
+                        <div class="card position-relative table-card table-${status}" id="table-${table.id}" data-table-id="${table.id}">
                             <img src="${imgSrc}" alt="table ${status}" class="card-img-top">
                             <div class="card-img-overlay">
                                 <h5 class="card-title text-white">${table.number}</h5>
                             </div>
+                            <div class="order-details"></div>
                         </div>
                     </div>
                 `;
                 container.append(html);
             });
 
-            // // Attach hover event after rendering
+            $('.table-card').click(function() {
+                const tableId = $(this).data('table-id');
+                const cardTarget = $(this).find('.card');
+                console.log(cardTarget);
+                cardTarget.addClass('card-blurred');
+            });
+
+            // Attach hover event after rendering
             $('.table-card').hover(
                 function() {
-                    $('#modal-test').append(`                    
+                    const tableId = $(this).data('table-id');
+                    const orderDetailsContainer = $(this).find('.order-details');
+                    // Determine card position relative to viewport
+                    const cardOffset = $(this).offset();
+                    const cardWidth = $(this).outerWidth();
+                    const windowWidth = $(window).width();
+                    // Remove previous direction classes
+                    orderDetailsContainer.removeClass('left right');
+                    // If card is in the right half of the viewport, show details to the left
+                    if (cardOffset.left + cardWidth / 2 > windowWidth / 2) {
+                        orderDetailsContainer.addClass('left');
+                    } else {
+                        orderDetailsContainer.addClass('right');
+                    }
+                    $(orderDetailsContainer).append(`                    
                     <div class="spinner-border text-dark" role="status">
                       <span class="visually-hidden">Loading...</span>
                     </div>`);
-                    const tableId = $(this).data('table-id');
-
-                    getTableOrderDetails(tableId).then(orderDetails => {
-                        if (orderDetails.order !== null) {
-                            $('#modal-test').empty();
-                            renderOrderDetails(orderDetails);
-                        } else {
-                            $('#modal-test').empty();
+                    getTableOrderDetails(tableId).then(response => {
+                        if ($(this).is(':hover')) {
+                            if (response.order !== null) {
+                                renderOrderDetails(response, orderDetailsContainer)
+                            } else {
+                                orderDetailsContainer.html('<p class="text-muted p-2 text-center small">No active order.</p>');
+                            }
+                        }
+                    }).catch(error => {
+                        console.error("Error Fetching order details : ", error);
+                        if ($(this).is(':hover')) {
+                            orderDetailsContainer.html('<p class="text-danger p-2 text-center small">Error loading.</p>');
                         }
                     });
                 },
                 function() {
-                    $('#modal-test').empty();
+                    $(this).find('.order-details').empty();
                 }
             );
         }
@@ -222,35 +271,23 @@
             $('#floor-selector button').first().trigger('click');
         }
 
-        // getTableOrderDetails(3).then(orderDetails => {
-        //     console.log(orderDetails);
-        //     if (orderDetails.order !== null) {
-        //         console.log("AAAAAAAAAAAAAAAAAAAAAAAAA");
+        function fetchAndRenderTables() {
+            getAllDiningTables()
+                .then(tables => {
+                    allTables = tables;
 
-        //         renderOrderDetails(orderDetails);
-        //     }
-        // })
+                    const uniqueFloors = [...new Set(tables.map(t => t.floor))].sort();
+                    renderFloorButtons(uniqueFloors);
 
-        // getAllDiningTables().then(allTables => {
-        //     console.log("All tables : ", allTables);
-        // }).catch(error => {
-        //     console.error("Error fetching data", error);
-        // });
-        getAllDiningTables()
-            .then(tables => {
-                allTables = tables;
-
-                const uniqueFloors = [...new Set(tables.map(t => t.floor))].sort();
-                renderFloorButtons(uniqueFloors);
-
-                // Optionally render first floor by default
-                renderTables(tables.filter(t => t.floor === uniqueFloors[0]));
-            })
-            .catch(error => {
-                console.error("Error fetching data", error);
-            });
-
-
+                    // Optionally render first floor by default
+                    renderTables(tables.filter(t => t.floor === uniqueFloors[0]));
+                })
+                .catch(error => {
+                    console.error("Error fetching data", error);
+                })
+        }
+        fetchAndRenderTables()
+        setInterval(fetchAndRenderTables, 30000) //refresh table every 30 seconds;
     });
 </script>
 @endsection
