@@ -178,10 +178,11 @@
                 <td>{{ $order->tables->number }}</td>
                 <td class="text-center"><span class="badge rounded-pill order-{{Str::lower( $order->status_label) }}" style="width: 100px; font-size: 12px;">{{Str::upper( $order->status) }}</span></td>
                 <td>{{ $order->total_price }}</td>
-                <td>Pembayaran : {{$order->payment_method=='qris'?Str::upper($order->payment_method):Str::ucfirst($order->payment_method) }} <br> <span class="badge rounded-pill payment-{{ Str::lower($order->payment_status) }}" style="width: 100px">{{ Str::upper($order->payment_status)}}</span></td>
+                <td>{{$order->payment_method=='qris'?Str::upper($order->payment_method):Str::ucfirst($order->payment_method) }} <br> <span class="badge rounded-pill payment-{{ Str::lower($order->payment_status) }}" style="width: 100px">{{ Str::upper($order->payment_status)}}</span></td>
                 <td>
-                    Created : {{ $order->created_at }} <br>
-                    Updated : {{ $order->updated_at }}
+                    {{ ($order->created_at)->format('D, j-n-Y') }}
+                    <!-- Created : {{ $order->created_at }} <br> -->
+                    <!-- Updated : {{ $order->updated_at }} -->
                 </td>
                 <td>
                     <a href={{ route('orders.printPDF', $order) }} type="button" class="btn btn-primary" target="_blank"><i class="fa-solid fa-eye"></i></a>
