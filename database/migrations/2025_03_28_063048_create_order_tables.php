@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('customer_name')->default("Guest");
             $table->unsignedBigInteger('table_id')->nullable();
-            $table->string('status')->default('pending');
+            $table->unsignedInteger('status')->comment('1=serving, 2=completed, 3=cancelled')->default(0);
             $table->double('total_price')->default(0);
             $table->double('paid')->default(0);
             $table->string('notes')->nullable(true);
